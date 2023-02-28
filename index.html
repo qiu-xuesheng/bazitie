@@ -1,69 +1,69 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 <head>
-	<title>�{�N�K�r��</title>
+	<title>現代八字帖</title>
     <link rel="stylesheet" href="styles.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 	<script src="calculate.js"> </script>
 </head>
 <body>
     <div class="tm-container">
-        <!--���D��r-->
+        <!--標題文字-->
         <div class="tm-text-white tm-page-header-container">
-            <h1 class="tm-page-header" >�{�N�K�r��</h1>
+            <h1 class="tm-page-header" >現代八字帖</h1>
         </div>
 
-        <!--�����ܳ��Ӥ�-->
+        <!--首頁至頂照片-->
         <div class="tm-main-content">
             <div id="tm-intro-img"></div>           
 
 				<section class="tm-section tm-section-small">
-                    <h2 class="tm-section-header">�ϥλ���</h2>
+                    <h2 class="tm-section-header">使用說明</h2>
                     <p>
-                    ������̷ӷR���y(Gary Chapman, 1998)�H�ηR���T�]��(Sternberg, 1986)�i��]�p�A�w���i�@�����Q���Ŷq�P�����ѦҡA�D�n���Ѹ�T�p�U�G				
+                    本表單依照愛之語(Gary Chapman, 1998)以及愛的三因論(Sternberg, 1986)進行設計，預期可作為情侶間衡量感情的參考，主要提供資訊如下：				
                     <br>
-					*�N�P�����u�U���V�o���v���X�ӤH���u�R���y�e��v�A����X���U���R�������{�סC
+					*將感情中「各面向得分」結合個人的「愛之語占比」，換算出當下對於愛的滿足程度。
                     <br>
-					*�̾ڷP�����U���V���o���A�������Q�ݩ���@�ءu�R�������v�C
+					*依據感情中各面向的得分，類推情侶屬於哪一種「愛的類型」。
 					<br>
-					*��i�N�ﶵ�@���u�w�����G�v�A�ӵ����b�@�_�᪺�o���]���B���u�w�����G�v�O���u��H�@�ѫ᪺���G�v�A�ӫD��譱�����ݡ^�C
+					*亦可將選項作為「預期結果」，來評估在一起後的得分（此處的「預期結果」是指「兩人共識後的結果」，而非單方面的期待）。
                     </p>
 					<p style="font-size:10px; background-color:#F8F8FF; ">
-					�������楼�g�H�ī�����A�]���ȨѰѦҡA����@���橹�Τ��⪺�̾ڡC
+					※本表單未經信效度檢驗，因此僅供參考，不能作為交往或分手的依據。
 					<br>
-					���������{���Ȩϥ�HTML�BCSS�BJavascript�y�k���g�A�L��ƻ`�����ü{�C
+					※本網頁程式僅使用HTML、CSS、Javascript語法撰寫，無資料蒐集之疑慮。
 					</p>
 
-			        <h3 class="tm-section-header">�R���y�e��</h3>
+			        <h3 class="tm-section-header">愛之語占比</h3>
 					<p>
-                    �Х���J�ӤH�����طR���y�e��G				
+                    請先輸入個人的五種愛之語占比：				
 					<br>
-                    (�z�i�H�z�L<a href="https://5lovelanguages.com/quizzes/love-language" target="_blank">5lovelanguages.com</a>���o�ƾڡA�ΨϥΨ�L���������G�A���⦨�ʤ���A��J�C)				
+                    (您可以透過<a href="https://5lovelanguages.com/quizzes/love-language" target="_blank">5lovelanguages.com</a>取得數據，或使用其他網頁的結果，換算成百分比再填入。)				
                     </p>
 					<div class="input-group mb-3">
-					  <span class="input-group-text">�_�Q���۳B</span>	
+					  <span class="input-group-text">寶貴的相處</span>	
 					  <input type="text" class="form-control" id="QualityTime" placeholder="Quality time" aria-label="Username">
 					  <span class="input-group-text">%</span>
 					</div>					
 					<div class="input-group mb-3">
-					  <span class="input-group-text">�֩w�P���g</span>	
+					  <span class="input-group-text">肯定與誇讚</span>	
 					  <input type="text" class="form-control" id="WordsOfAffirmation" placeholder="Words of affirmation" aria-label="Username">
 					  <span class="input-group-text">%</span>
 					</div>
 					<div class="input-group mb-3">
-					  <span class="input-group-text">���骺��Ĳ</span>	
+					  <span class="input-group-text">肢體的接觸</span>	
 					  <input type="text" class="form-control" id="PhysicalTouch" placeholder="Physical touch" aria-label="Username">
 					  <span class="input-group-text">%</span>
 					</div>					
 					<div class="input-group mb-3">
-					  <span class="input-group-text">��ڪ��A��</span>	
+					  <span class="input-group-text">實際的服務</span>	
 					  <input type="text" class="form-control" id="ActsOfService" placeholder="Acts of service" aria-label="Username">
 					  <span class="input-group-text">%</span>
 					</div>
 					<div class="input-group mb-3">
-					  <span class="input-group-text">��o��§��</span>	
+					  <span class="input-group-text">能得到禮物</span>	
 					  <input type="text" class="form-control" id="ReceivingGifts" placeholder="Receiving gifts" aria-label="Username">
 					  <span class="input-group-text">%</span>
 					</div>
@@ -71,697 +71,697 @@
 
             <section class="tm-section tm-section-small">
             	<form name="lovecalculator">	
-					<!--�_�Q���۳B-�o��-->
-					<h2 class="tm-section-header">�_�Q���۳B-�o��</h2>
+					<!--寶貴的相處-得分-->
+					<h2 class="tm-section-header">寶貴的相處-得分</h2>
 					<div>
-						�w��/�ثe�۳B�����A�G				
+						預期/目前相處的狀態：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q1" id="Q1_1" value="2">
 						  <label class="form-check-label" for="Q11">
-							�C�ѯ��ѡA���賣�֦b�䤤�C
+							每天能聊天，雙方都樂在其中。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q1" id="Q1_2" value="1">
 						  <label class="form-check-label" for="Q12">
-							�ٯ౵���A���A�h�@�Ƿ|��n�C
+							還能接受，但再多一些會更好。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q1" id="Q1_3" value="0">
 						  <label class="form-check-label" for="Q13">
-							���q�A�w���w������ۥѪŶ��C
+							普通，已約定給雙方自由空間。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q1" id="Q1_4" value="-1">
 						  <label class="form-check-label" for="Q14">
-							�U���U���A�����~�|�������ߡC
+							各忙各的，偶爾才會彼此關心。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q1" id="Q1_5" value="-2">
 						  <label class="form-check-label" for="Q15">
-							���`�S������涰�A�w�g�¤�C
+							平常沒有什麼交集，已經麻木。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe�������W�v�G				
+						預期/目前見面的頻率：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q2" id="Q2_1" value="2">
 						  <label class="form-check-label" for="Q21">
-							�C�ѳ��i�H�����C
+							每天都可以見面。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q2" id="Q2_2" value="1">
 						  <label class="form-check-label" for="Q22">
-							�C�g����4~6�ѡC
+							每週見面4~6天。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q2" id="Q2_3" value="0">
 						  <label class="form-check-label" for="Q23">
-							�C�g����1~3�ѡC
+							每週見面1~3天。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q2" id="Q2_4" value="-1">
 						  <label class="form-check-label" for="Q24">
-							�C�먣��1~4�ѡC
+							每月見面1~4天。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q2" id="Q2_5" value="-2">
 						  <label class="form-check-label" for="Q25">
-							�X�Ӥ�~���@���C
+							幾個月才見一面。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe�۳B���~��P�ɪ��G				
+						預期/目前相處的品質與時長：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q3" id="Q3_1" value="2">
 						  <label class="form-check-label" for="Q31">
-							�������Z8�p�ɥH�W�C
+							不受打擾8小時以上。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q3" id="Q3_2" value="1">
 						  <label class="form-check-label" for="Q32">
-							�������Z4~7�Ӥp�ɡC
+							不受打擾4~7個小時。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q3" id="Q3_3" value="0">
 						  <label class="form-check-label" for="Q33">
-							�������Z1~3�Ӥp�ɡC
+							不受打擾1~3個小時。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q3" id="Q3_4" value="-1">
 						  <label class="form-check-label" for="Q34">
-							�������Z����1�p�ɡC
+							不受打擾未及1小時。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="Q3" id="Q3_5" value="-2">
 						  <label class="form-check-label" for="Q35">
-							�۳B���`�O���쥴�Z�C
+							相處時總是受到打擾。
 						  </label>
 						</div>
 					</div>				 
 		
-					<!--�֩w�P���g-�o��-->			
-					<h2 class="tm-section-header">�֩w�P���g-�o��</h2>
+					<!--肯定與誇讚-得分-->			
+					<h2 class="tm-section-header">肯定與誇讚-得分</h2>
 					
 					<div>
-						�w��/�ثe���֩w�����A�G				
+						預期/目前受肯定的狀態：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W1" id="W1_1" value="2">
 						  <label class="form-check-label" for="W11">
-							���ަp��A���`�O��o���Q���֩w�C
+							不管如何，我總是能得到伴侶的肯定。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W1" id="W1_2" value="1">
 						  <label class="form-check-label" for="W12">
-							��Q�|�����A�b�L�{���諸�ɭԪ֩w�C
+							伴侶會評估，在他認為對的時候肯定。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W1" id="W1_3" value="0">
 						  <label class="form-check-label" for="W13">
-							���ӻݭn�֩w�A�������H�����M�w�C
+							不太需要肯定，彼此都信任對方決定。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W1" id="W1_4" value="-1">
 						  <label class="form-check-label" for="W14">
-							��Q�Q�k�D�[�A�|�w��L���[�H����C
+							伴侶想法主觀，會針對過錯加以批評。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W1" id="W1_5" value="-2">
 						  <label class="form-check-label" for="W15">
-							��Q�L�צۭt�A�`�O�_�w�ڰ����M�w�C
+							伴侶過度自負，總是否定我做的決定。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe�����g�����A�G	
+						預期/目前受誇讚的狀態：	
 						<p style="font-size:10px; background-color:#F8F8FF; ">
-						���u���Q������ﶵ�v���u�����L�ﶵ�Q��ܡC
+						※「有被批評的選項」應優先於其他選項被選擇。
 						<br>
-						�Ҥ@�G��Q����ڪ��u��Q�v�A�Y�Ϧ��g��u�~���v�B�u���{�v�A�����i��ܡu��Q���g��~���B��Q�B���{�䤤��̡C�v
+						例一：伴侶批評我的「思想」，即使有讚賞「外貌」、「表現」，仍不可選擇「伴侶僅讚賞外貌、思想、表現其中兩者。」
 						<br>
-						�ҤG�G��Q�g��u�~���v�B�u���{�v�A��u��Q�v�����m���A�~�i��ܡu��Q���g��~���B��Q�B���{�䤤��̡C�v
+						例二：伴侶讚賞「外貌」、「表現」，對「思想」不予置評，才可選擇「伴侶僅讚賞外貌、思想、表現其中兩者。」
 						</p>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W2" id="W2_1" value="2">
 						  <label class="form-check-label" for="W21">
-							��Q�`�O�|�g��ڪ��~���B��Q�B���{�C
+							伴侶總是會讚賞我的外貌、思想、表現。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W2" id="W2_2" value="1">
 						  <label class="form-check-label" for="W22">
-							��Q���g��~���B��Q�B���{�䤤��̡C
+							伴侶僅讚賞外貌、思想、表現其中兩者。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W2" id="W2_3" value="0">
 						  <label class="form-check-label" for="W23">
-							��Q���g��~���B��Q�B���{�䤤�@�̡C
+							伴侶僅讚賞外貌、思想、表現其中一者。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W2" id="W2_4" value="-1">
 						  <label class="form-check-label" for="W24">
-							��Q�`����~���B��Q�B���{�䤤�@�̡C
+							伴侶常批評外貌、思想、表現其中一者。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W2" id="W2_5" value="-2">
 						  <label class="form-check-label" for="W25">
-							��Q�`����~���B��Q�B���{�䤤��̡C
+							伴侶常批評外貌、思想、表現其中兩者。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe���W�j���W�v�G				
+						預期/目前正增強的頻率：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W3" id="W3_1" value="2">
 						  <label class="form-check-label" for="W31">
-							�C�ѳ��|�o��֩w�P���g�C
+							每天都會得到肯定與誇讚。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W3" id="W3_2" value="1">
 						  <label class="form-check-label" for="W32">
-							�u�������o��֩w�P���g�C
+							只有偶爾得到肯定與誇讚。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W3" id="W3_3" value="0">
 						  <label class="form-check-label" for="W33">
-							�塚���欰�|��ǶS���@�C
+							對彼此行為舉止褒貶不一。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W3" id="W3_4" value="-1">
 						  <label class="form-check-label" for="W34">
-							��������_�w�P�S�C�~�h�C
+							偶爾受到否定與貶低居多。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="W3" id="W3_5" value="-2">
 						  <label class="form-check-label" for="W35">
-							�C�ѳ��|����_�w�P�S�C�C
+							每天都會受到否定與貶低。
 						  </label>
 						</div>
 					</div>
 					
-					<!--���骺��Ĳ-�o��-->			
-					<h2 class="tm-section-header">���骺��Ĳ-�o��</h2>
+					<!--肢體的接觸-得分-->			
+					<h2 class="tm-section-header">肢體的接觸-得分</h2>
 					<p style="font-size:10px; background-color:#F8F8FF; ">
-                    ���קK�[�P���ΡA�ϥ�<a href="https://zh.wikipedia.org/zh-tw/%E6%A3%92%E7%90%83%E7%9A%84%E6%80%A7%E9%9A%B1%E5%96%BB#%E7%B4%B0%E7%AF%80" target="_blank">�βy��������</a>�i��y�z�C				
+                    為避免觀感不佳，使用<a href="https://zh.wikipedia.org/zh-tw/%E6%A3%92%E7%90%83%E7%9A%84%E6%80%A7%E9%9A%B1%E5%96%BB#%E7%B4%B0%E7%AF%80" target="_blank">棒球的性隱喻</a>進行描述。				
                     <br>
-					*�@�S�GHolding hands�BHug�BKiss on the cheek
+					*一壘：Holding hands、Hug、Kiss on the cheek
                     <br>
-					*�G�S�GFrench kiss�BTouch body
+					*二壘：French kiss、Touch body
 					<br>
-					*�T�S�GMutual masturbation
+					*三壘：Mutual masturbation
 					<br>
-					*���S���GSex
+					*全壘打：Sex
                     </p>
 					<div>
-						�w��/�ثe���鱵Ĳ�����A�G				
+						預期/目前肢體接觸的狀態：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P1" id="P1_1" value="2">
 						  <label class="form-check-label" for="P11">
-							���N�ثe���S�ơA����/�����i�@�B�F�C
+							滿意目前的壘數，不用/不能更進一步了。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P1" id="P1_2" value="1">
 						  <label class="form-check-label" for="P12">
-							�ثe�S�Ʃ|�i�A�i�H���ܧƱ��i�@�B�C
+							目前壘數尚可，可以的話希望更進一步。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P1" id="P1_3" value="0">
 						  <label class="form-check-label" for="P13">
-							�P�S�]�ݳ\�[�A�M��Q�A�ֽͽ׳o�@���C
+							同壘包待許久，和伴侶鮮少談論這一塊。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P1" id="P1_4" value="-1">
 						  <label class="form-check-label" for="P14">
-							�ثe�S�Ƥ����A�D�`�Ʊ�����i�@�B�C
+							目前壘數不夠，非常希望能夠更進一步。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P1" id="P1_5" value="-2">
 						  <label class="form-check-label" for="P15">
-							�����ثe�S�ơA����Q�S�N�@�@�_�]�S�C
+							不滿目前壘數，但伴侶沒意願一起跑壘。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe���鱵Ĳ���W�v�G				
+						預期/目前肢體接觸的頻率：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P2" id="P2_1" value="2">
 						  <label class="form-check-label" for="P21">
-							�C�ѳ��i�H�]�캡�N���S�ơC
+							每天都可以跑到滿意的壘數。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P2" id="P2_2" value="1">
 						  <label class="form-check-label" for="P22">
-							�C�g�ܤ֤@���캡�N���S�ơC
+							每週至少一次到滿意的壘數。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P2" id="P2_3" value="0">
 						  <label class="form-check-label" for="P23">
-							�C��ܤ֤@���캡�N���S�ơC
+							每月至少一次到滿意的壘數。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P2" id="P2_4" value="-1">
 						  <label class="form-check-label" for="P24">
-							�ƭӤ�~�캡�N���S�Ƥ@���C
+							數個月才到滿意的壘數一次。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P2" id="P2_5" value="-2">
 						  <label class="form-check-label" for="P25">
-							�w�g�ܤ[�S���]�S�F�I�I�I�I
+							已經很久沒有跑壘了！！！！
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe���鱵Ĳ���~��G				
+						預期/目前肢體接觸的品質：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P3" id="P3_1" value="2">
 						  <label class="form-check-label" for="P31">
-							�ۤv�b�S�W���}�n�i�H�Q�����C
+							自己在壘上的癖好可以被滿足。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P3" id="P3_2" value="1">
 						  <label class="form-check-label" for="P32">
-							��Q���N�@�i�X�b�S�W���}�n�C
+							伴侶有意願磨合在壘上的癖好。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P3" id="P3_3" value="0">
 						  <label class="form-check-label" for="P33">
-							���캡�N�S�ơA���w�����L���C
+							有到滿意壘數，但已食之無味。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P3" id="P3_4" value="-1">
 						  <label class="form-check-label" for="P34">
-							����S�W�����ʦ��Pı�b�N�N�C
+							對於壘上的互動有感覺在將就。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="P3" id="P3_5" value="-2">
 						  <label class="form-check-label" for="P35">
-							����S�W�����ʤw���͹��c�P�C
+							對於壘上的互動已產生厭惡感。
 						  </label>
 						</div>
 					</div>
 
-					<!--��ڪ��A��-�o��-->			
-					<h2 class="tm-section-header">��ڪ��A��-�o��</h2>
+					<!--實際的服務-得分-->			
+					<h2 class="tm-section-header">實際的服務-得分</h2>
 					<div>
-						�w��/�ثe������ڪA�Ȫ����A�G				
+						預期/目前彼此實際服務的狀態：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A1" id="A1_1" value="2">
 						  <label class="form-check-label" for="A11">
-							�������|�֪��ݨD���Q�L�L���ܦa���@�C
+							食衣住行育樂的需求都被無微不至地呵護。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A1" id="A1_2" value="1">
 						  <label class="form-check-label" for="A12">
-							�������|�֦�3~5���]���A�ȦӺ����C
+							食衣住行育樂有3~5項因對方服務而滿足。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A1" id="A1_3" value="0">
 						  <label class="form-check-label" for="A13">
-							�������|�֫ܥ��Ŧa�]�ۤ��A�ȦӺ����C
+							食衣住行育樂很平衡地因相互服務而滿足。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A1" id="A1_4" value="-1">
 						  <label class="form-check-label" for="A14">
-							�������|�֦�1~3���b�o�q�P�����B�~�I�X�C
+							食衣住行育樂有1~3項在這段感情需額外付出。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A1" id="A1_5" value="-2">
 						  <label class="form-check-label" for="A15">
-							�������|�֦�4���H�W�b�o�q�P�����B�~�I�X�C
+							食衣住行育樂有4項以上在這段感情需額外付出。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe������ڪA�Ȫ��W�v�G				
+						預期/目前彼此實際服務的頻率：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A2" id="A2_1" value="2">
 						  <label class="form-check-label" for="A21">
-							��Q�C�Ѩ̧ڪ��ݨD�����A�ȡC
+							伴侶每天依我的需求給予服務。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A2" id="A2_2" value="1">
 						  <label class="form-check-label" for="A22">
-							��Q�|�T�w�C�g�A�ȧڴX��ơC
+							伴侶會固定每週服務我幾件事。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A2" id="A2_3" value="0">
 						  <label class="form-check-label" for="A23">
-							�۵��ۨ��A���`�ݭn���A�ȡC
+							自給自足，不常需要對方服務。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A2" id="A2_4" value="-1">
 						  <label class="form-check-label" for="A24">
-							�O�ߪA�Ȧ�Q�w�h�ּv�T�ͬ��C
+							費心服務伴侶已多少影響生活。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A2" id="A2_5" value="-2">
 						  <label class="form-check-label" for="A25">
-							�O�ߪA�Ȧ�Q���ڵJ�Y���B�F�C
+							費心服務伴侶讓我焦頭爛額了。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe��ڪA�Ȫ��~��G				
+						預期/目前實際服務的品質：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A3" id="A3_1" value="2">
 						  <label class="form-check-label" for="A31">
-							���쪺�A�ȥX�G�N�ƪ����W��C
+							受到的服務出乎意料的高規格。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A3" id="A3_2" value="1">
 						  <label class="form-check-label" for="A32">
-							���쪺�A�Ȳ����󥭧������ǡC
+							受到的服務略高於平均的水準。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A3" id="A3_3" value="0">
 						  <label class="form-check-label" for="A33">
-							���쪺�A�ȥu��Ҧ椽�ƦӤw�C
+							受到的服務只算例行公事而已。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A3" id="A3_4" value="-1">
 						  <label class="form-check-label" for="A34">
-							���쪺�A�ȬO�ڥD�ʭn�D�Ӫ��C
+							受到的服務是我主動要求來的。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="A3" id="A3_5" value="-2">
 						  <label class="form-check-label" for="A35">
-							��ʤ��ݡA���D��Q���A�ȤF�C
+							寧缺勿濫，不求伴侶的服務了。
 						  </label>
 						</div>
 					</div>
 		
-					<!--��o��§��-�o��-->			
-					<h2 class="tm-section-header">��o��§��-�o��</h2>
+					<!--能得到禮物-得分-->			
+					<h2 class="tm-section-header">能得到禮物-得分</h2>
 					<div>
-						�w��/�ثe�o��§�������A�G				
+						預期/目前得到禮物的狀態：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R1" id="R1_1" value="2">
 						  <label class="form-check-label" for="R11">
-							�ݨD�Q�Ӥ߰O�U�A�]���`����ߤp§�C
+							需求被細心記下，因此常有驚喜小禮。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R1" id="R1_2" value="1">
 						  <label class="form-check-label" for="R12">
-							���|�O�ߤO�ǳơA���Q��|����e§�C
+							不會費心力準備，但想到會順手送禮。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R1" id="R1_3" value="0">
 						  <label class="form-check-label" for="R13">
-							���D���}�f�n�A�_�h���ΥD�ʰe§�C
+							除非對方開口要，否則不用主動送禮。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R1" id="R1_4" value="-1">
 						  <label class="form-check-label" for="R14">
-							�n�A�T�m��A���~�|���D�n�e§���C
+							要再三叮囑，對方才會知道要送禮物。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R1" id="R1_5" value="-2">
 						  <label class="form-check-label" for="R15">
-							���ɶ��@�A�аU�A���̵Mť�Ӥ��D�C
+							長時間一再請託，對方依然聽而不聞。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe�o��§�����W�v�G				
+						預期/目前得到禮物的頻率：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R2" id="R2_1" value="2">
 						  <label class="form-check-label" for="R21">
-							��Q�C�ѵ��ڶK�ߤS��ߪ�§���C
+							伴侶每天給我貼心又驚喜的禮物。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R2" id="R2_2" value="1">
 						  <label class="form-check-label" for="R22">
-							��Q�������ڶK�ߤS��ߪ�§���C
+							伴侶偶爾給我貼心又驚喜的禮物。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R2" id="R2_3" value="0">
 						  <label class="form-check-label" for="R23">
-							�w�g���w�n�A�u���S�O�`��e§�C
+							已經約定好，只有特別節日送禮。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R2" id="R2_4" value="-1">
 						  <label class="form-check-label" for="R24">
-							�u�b���H���j�N�q���`��e§�C
+							只在對兩人重大意義的節日送禮。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R2" id="R2_5" value="-2">
 						  <label class="form-check-label" for="R25">
-							����ٰO�o�n�e§�N�w�g�����F�C
+							對方還記得要送禮就已經不錯了。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe�o��§�����~��G				
+						預期/目前得到禮物的品質：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R3" id="R3_1" value="2">
 						  <label class="form-check-label" for="R31">
-							�o�쪺§���O�߶O�ɶO�O�O���C
+							得到的禮物費心費時費力費錢。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R3" id="R3_2" value="1">
 						  <label class="form-check-label" for="R32">
-							�ȶO�߶O�ɶO���O�O�䤤�T���C
+							僅費心費時費錢費力其中三項。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R3" id="R3_3" value="0">
 						  <label class="form-check-label" for="R33">
-							�ȶO�߶O�ɶO���O�O���@�ⶵ�C
+							僅費心費時費錢費力任一兩項。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R3" id="R3_4" value="-1">
 						  <label class="form-check-label" for="R34">
-							�e��§���S��������ڪ��ݨD�C
+							送的禮物沒有對應到我的需求。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="R3" id="R3_5" value="-2">
 						  <label class="form-check-label" for="R35">
-							����O�����S�۷N���ŭl�e§�C
+							明顯是完全沒誠意的敷衍送禮。
 						  </label>
 						</div>
 					</div>		
 
-					<!--�M�w�P�ӿ�-�o��-->			
-					<h2 class="tm-section-header">�M�w�P�ӿ�-�o��</h2>
+					<!--決定與承諾-得分-->			
+					<h2 class="tm-section-header">決定與承諾-得分</h2>
 					<div>
-						�w��/�ثe�M�w�P�ӿժ����A�G				
+						預期/目前決定與承諾的狀態：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D1" id="D1_1" value="2">
 						  <label class="form-check-label" for="D11">
-							����N�������s�b������ˤH�B�ͤH�C
+							雙方將彼此的存在公之於親人、友人。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D1" id="D1_2" value="1">
 						  <label class="form-check-label" for="D12">
-							����u��������ˤH�B�ͤH�䤤�@�̡C
+							雙方只有公之於親人、友人其中一者。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D1" id="D1_3" value="0">
 						  <label class="form-check-label" for="D13">
-							����|���N�o�q�ʤH���Y�i�D����H�C
+							雙方尚未將這段戀人關係告訴任何人。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D1" id="D1_4" value="-1">
 						  <label class="form-check-label" for="D14">
-							�ǬN���A�A���B�b�n�ͥH�W�ʤH�����C
+							曖昧狀態，仍處在好友以上戀人未滿。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D1" id="D1_5" value="-2">
 						  <label class="form-check-label" for="D15">
-							�u����譱�t�ʡA����ȬO���q�B�͡C
+							只有單方面暗戀，雙方僅是普通朋友。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe�M�w�P�ӿռi��{�סG				
+						預期/目前決定與承諾履行程度：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D2" id="D2_1" value="2">
 						  <label class="form-check-label" for="D21">
-							�u�n���L���ӿաA�Y�Ϯ{���ܬG�A���|�i��C
+							只要說過的承諾，即使徒生變故，仍會履行。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D2" id="D2_2" value="1">
 						  <label class="form-check-label" for="D22">
-							�Y�{���ܬG�A�L����Q�N���M�w�O�_�n�i��C
+							若徒生變故，尊重伴侶意見決定是否要履行。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D2" id="D2_3" value="0">
 						  <label class="form-check-label" for="D23">
-							���{�ꭱ�A�Ŷq����̦��q����׼i��ӿաC
+							視現實面，衡量雙方最有益的方案履行承諾。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D2" id="D2_4" value="-1">
 						  <label class="form-check-label" for="D24">
-							�H�ۨ��Q�q���Ҷq�ӨM�w�O�_�i��P���ӿաC
+							以自身利益為考量來決定是否履行感情承諾。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D2" id="D2_5" value="-2">
 						  <label class="form-check-label" for="D25">
-							�P�������ӿչ�ڭ̦Ө��u�O�ᨥ���y�Ӥw�C
+							感情中的承諾對我們而言只是花言巧語而已。
 						  </label>
 						</div>
 					</div>
 					<br>
 					<div>
-						�w��/�ثe�M�w�P�ӿժ����۫סG				
+						預期/目前決定與承諾的忠誠度：				
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D3" id="D3_1" value="2">
 						  <label class="form-check-label" for="D31">
-							�J�M�����P�{���橹�A����J������n����H�]���|�Ҽ{�C
+							既然答應與現任交往，往後遇到條件更好的對象也不會考慮。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D3" id="D3_2" value="1">
 						  <label class="form-check-label" for="D32">
-							���M����Q�A���B���n�|�չϻP��Q���q�A�������ͪŶ��C
+							雖然有伴侶，但處不好會試圖與伴侶溝通，給雙方交友空間。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D3" id="D3_3" value="0">
 						  <label class="form-check-label" for="D33">
-							���M����Q�A���B���n�S�J���߻����H�A�|�q�q�����B�͡C
+							雖然有伴侶，但處不好又遇到更心儀的人，會默默先當朋友。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D3" id="D3_4" value="-1">
 						  <label class="form-check-label" for="D34">
-							���M����Q�A���B���n�S�J���߻����H�A�|�l�D�÷d�ǬN�C
+							雖然有伴侶，但處不好又遇到更心儀的人，會追求並搞曖昧。
 						  </label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="radio" name="D3" id="D3_5" value="-2">
 						  <label class="form-check-label" for="D35">
-							���M����Q�A���B���n���ܡA�|�}�l���L��H�õo�i���Y�C
+							雖然有伴侶，但處不好的話，會開始找其他對象並發展關係。
 						  </label>
 						</div>
 					</div>
 		
-				<center><button class="button button1" type="button" onclick="CalculateLove()">�p��</button></center>
+				<center><button class="button button1" type="button" onclick="CalculateLove()">計算</button></center>
 					
 				</form>
 				
 				<p style="font-size:10px; background-color:#F8F8FF; ">
-                �p����k�G				
+                計分方法：				
                 <br>
-				(1)�����o�U���R���y���e��C
+				(1)先取得各項愛之語的占比。
                 <br>
-				(2)�w��U���V���u���A�v�B�u�W�v�v�B�u�~��v���i������C
+				(2)針對各面向的「狀態」、「頻率」、「品質」等進行評分。
 				<br>
-				(3)�C�D�����ӿﶵ�A���ƥѧC�찪���O���G-2�B-1�B0�B1�B2���C
+				(3)每題有五個選項，分數由低到高分別為：-2、-1、0、1、2分。
 				<br>
-				(4)�N�U���V�o���P�ӭ��V�e��ۭ��A��o�u������ơv�C
+				(4)將各面向得分與該面向占比相乘，獲得「換算分數」。
 				<br>
-				�ҡG�u�_�Q���۳B�v�e20%�A��l���Ƭ�5���A������ƧY��5��0.2=1���C
+				例：「寶貴的相處」占20%，原始分數為5分，換算分數即為5×0.2=1分。
 				<br>
-				(5)�N�Ҧ�������ƥ[�`�Y���z���P���o���C
+				(5)將所有換算分數加總即為您的感情得分。
 				<br>
-				���z�i�H�Ѧҵ��G�A�F�ѷP�������ʪ������A�H�K�ﵽ���Y�C
+				※您可以參考結果，了解感情中欠缺的元素，以便改善關係。
                 </p>
 				
 				<div id="result" style="text-align:center"></div>
 				<div id="point" style="text-align:center"></div>
 
-				<div><canvas id="LoveChart"></canvas></div> <!--�W����-->
+				<div><canvas id="LoveChart"></canvas></div> <!--柱狀圖-->
 				
 				<br>
 				<p style="font-size:10px; background-color:#F8F8FF; ">
-                �R���T��ø�s��k�G				
+                愛的三角繪製方法：				
                 <br>
-				(1)�����o�U���R���y����l���ơC
+				(1)先取得各項愛之語的原始分數。
                 <br>
-				(2)�]���p�F�ϵL�k��ܭt�ơA�G�N��l���ƥ[�W6���A�C�@�D�o���ѧC�찪�ܬ��G0�B1�B2�B3�B4���C
+				(2)因為雷達圖無法顯示負數，故將原始分數加上6分，每一題得分由低到高變為：0、1、2、3、4分。
 				<br>
-				(3)�N�u�_�Q���۳B-�o���v�B�u�֩w�P���g-�o���v�B�u��ڪ��A��-�o���v�B�u��o��§��-�o���v�k�����u�˱K�v�A�N����ƥ[�`�ᰣ4�C
+				(3)將「寶貴的相處-得分」、「肯定與誇讚-得分」、「實際的服務-得分」、「能得到禮物-得分」歸類為「親密」，將其分數加總後除4。
 				<br>
-				(4)�N�u�M�w�P�ӿ�-�o���v�����u�M�w/�ӿաv�C
+				(4)將「決定與承諾-得分」視為「決定/承諾」。
 				<br>
-				(5)�N�u���骺��Ĳ-�o���v�����u�E���v�C
+				(5)將「肢體的接觸-得分」視為「激情」。
 				<br>
-				(6)�U���V�o���ѧC�찪��0~12���A�N���G�H�p�F�ϧe�{�C
+				(6)各面向得分由低到高為0~12分，將結果以雷達圖呈現。
 				<br>
-				���z�i�H�Ѧ�<a href="https://zh.wikipedia.org/zh-tw/%E7%88%B1%E6%83%85%E4%B8%89%E5%9B%A0%E8%AE%BA#%E7%88%B1%E7%9A%84%E7%B1%BB%E5%9E%8B" target="_blank">����ʬ�</a>�A�F�ѳo�q�P������ݩ��طR�������A²�Ө����A�V�ͦV�u���T���Ρv�A�N���o�q�P���V���񧹬����R���A�T���Ϊ��j�p�]�M�w�ʷR�{�ת��j�z�C
+				※您可以參考<a href="https://zh.wikipedia.org/zh-tw/%E7%88%B1%E6%83%85%E4%B8%89%E5%9B%A0%E8%AE%BA#%E7%88%B1%E7%9A%84%E7%B1%BB%E5%9E%8B" target="_blank">維基百科</a>，了解這段感情比較屬於何種愛的類型，簡而言之，越趨向「正三角形」，代表這段感情越接近完美的愛情，三角形的大小也決定戀愛程度的強弱。
                 </p>				
 				
 				<br>
-				<div><canvas id="chartRadar"></canvas></div><!--�p�F��-->
+				<div><canvas id="chartRadar"></canvas></div><!--雷達圖-->
 
 
 				</section>
@@ -770,10 +770,10 @@
 		<br>
 		<footer style="text-align:center">
         <p class="tm-text-white tm-footer-text" style="font-size:6px">
-          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="�Х� CC ���v����" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">�{�N�K�r��</span>��<span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">qiuxuesheng</span>�s�@<br>�H<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">�Х�CC �m�W�Х�-�D�ӷ~��-�ۦP�覡���� 4.0 ��� ���v����</a>���X�C
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">現代八字帖</span>由<span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">qiuxuesheng</span>製作<br>以<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">創用CC 姓名標示-非商業性-相同方式分享 4.0 國際 授權條款</a>釋出。
         </p>
 		<p class="tm-text-white tm-footer-text" style="font-size:6px">
-		�������ĳ�P�^�X�w��<a href="mailto:ntcucpu@gmail.com" class="tm-contact-link">�P���p��</a>�I
+		有任何建議與回饋歡迎<a href="mailto:ntcucpu@gmail.com" class="tm-contact-link">與我聯絡</a>！
 		</p>
         </footer>
 	</div>
