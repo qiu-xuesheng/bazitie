@@ -86,7 +86,7 @@
 	DOpoint = temptotal;
 	temptotal = 0;	
 		
-	document.getElementById("result").innerHTML = "---最低分-6分/滿分6分，您在這段感情獲得 "+Math.round(total*10)/10+" 分---";
+	document.getElementById("result").innerHTML = "最低分-6分/滿分6分，您在這段感情獲得 "+Math.round(total*10)/10+" 分";
 	document.getElementById("point").innerHTML = 						
 		"愛之語面向(原始分數、換算分數)<br>*表示方式：得分/滿分<br>"+
 		"寶貴的相處("+QOpoint+"/6、"+Qpoint+"/"+6*parseInt(document.getElementById("QualityTime").value)/100+")<br>"+
