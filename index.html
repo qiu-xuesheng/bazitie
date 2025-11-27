@@ -1,783 +1,991 @@
-﻿<!DOCTYPE html>
-<html>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-	<title>現代八字帖</title>
-    <link rel="stylesheet" href="styles.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-	<script src="calculate.js"> </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>現代八字帖 & 愛之語測驗</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js 4.x -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        @import url(https://fonts.googleapis.com/earlyaccess/cwtexyen.css);
+
+        :root {
+            --primary-bg: #3a4a58;
+            --primary-text: #e0e0e0;
+            --accent-color: #996633; /* Gold/Brown */
+            --accent-hover: #b3773b;
+            --card-bg: #ffffff;
+            --card-text: #333333;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+            font-family: "cwTeXYen", "Open Sans", Arial, Helvetica, sans-serif;
+            font-size: 17px;
+            font-weight: 400;
+            padding: 15px;
+            margin: 0;
+        }
+
+        .tm-container {
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 標題與 Header */
+        .tm-page-header-container { text-align: center; }
+        .tm-page-header {
+            display: inline-block;
+            margin-top: 20px;
+            margin-bottom: 35px;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* 主內容區塊 */
+        .tm-main-content {
+            background-color: var(--card-bg);
+            color: var(--card-text);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        /* 圖片區 */
+        #tm-intro-img {
+            background-image: url(img/1.jpg);
+            background-position: center;
+            background-size: cover;
+            min-height: 300px;
+        }
+
+        /* 區塊樣式 */
+        .tm-section {
+            padding: 40px;
+        }
+        .tm-section-small {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tm-section-header {
+            color: var(--accent-color);
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.8rem;
+            margin-top: 40px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* 輸入框與按鈕 */
+        input[type="number"] {
+            text-align: center;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .btn-custom {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+        .btn-custom:hover {
+            background-color: var(--accent-hover);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .btn-outline-custom {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .btn-outline-custom:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        /* 測驗區塊樣式 */
+        .quiz-container {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            color: #555;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            text-align: left;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .option-btn:hover {
+            border-color: var(--accent-color);
+            background-color: #fffcf5;
+            color: var(--accent-color);
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            height: 8px;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .hidden { display: none; }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        /* 表單選項樣式優化 - 修正間距 */
+        .form-check {
+            margin-bottom: 2px; /* 縮減下邊距 */
+            padding: 5px 10px 5px 30px; /* 調整內距，縮減高度 */
+            border-radius: 5px;
+            transition: background 0.2s;
+            min-height: auto;
+        }
+        .form-check:hover {
+            background-color: #f8f9fa;
+        }
+        .form-check-input {
+             margin-left: -20px; /* Bootstrap default adjustment */
+        }
+        .form-check-input:checked + .form-check-label {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        .form-check-label {
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* 提示文字與原本樣式 */
+        .original-text-block {
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+        
+        /* 修正 .note-box 字體大小 */
+        .note-box {
+            font-size: 0.95rem; /* 放大字體，接近內文大小 */
+            background-color: #F8F8FF; 
+            padding: 15px; 
+            border-radius: 5px;
+            margin-top: 15px;
+            color: #555;
+            border-left: 4px solid var(--accent-color);
+            line-height: 1.6;
+        }
+
+        footer a { color: #ccc; text-decoration: none; }
+        footer a:hover { color: white; text-decoration: underline; }
+
+        /* 圖表容器 */
+        .chart-wrapper {
+            position: relative;
+            margin: auto;
+            height: 300px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* 列印樣式 */
+        @media print {
+            .no-print, .btn, footer, .tm-page-header-container, #toggleQuizBtn, .quiz-container, #tm-intro-img {
+                display: none !important;
+            }
+            body, .tm-main-content {
+                background-color: white !important;
+                color: black !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .tm-container {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .tm-section {
+                padding: 20px !important;
+            }
+            .chart-wrapper {
+                page-break-inside: avoid;
+            }
+        }
+
+    </style>
 </head>
 <body>
     <div class="tm-container">
-        <!--標題文字-->
-        <div class="tm-text-white tm-page-header-container">
-            <h1 class="tm-page-header" >現代八字帖</h1>
+        <!-- 標題 -->
+        <div class="tm-page-header-container">
+            <h1 class="tm-page-header">現代八字帖</h1>
         </div>
 
-        <!--首頁至頂照片-->
         <div class="tm-main-content">
-            <div id="tm-intro-img"></div>           
-
-				<section class="tm-section tm-section-small">
-                    <h2 class="tm-section-header">使用說明</h2>
-                    <p>
-                    本表單依照愛之語(Gary Chapman, 1998)以及愛的三因論(Sternberg, 1986)進行設計，預期可作為情侶間衡量感情的參考，主要提供資訊如下：				
-                    <br>
-					*將感情中「各面向得分」結合個人的「愛之語占比」，換算出當下對於愛的滿足程度。
-                    <br>
-					*依據感情中各面向的得分，類推情侶屬於哪一種「愛的類型」。
-					<br>
-					*您可以在相處過程中階段性地施測，並妥善利用瀏覽器的「列印」功能，將雙方在感情當中對於愛的期待做成紀錄，以便日後檢視、反思。
-					<br>
-					*亦可將選項作為「預期結果」，來評估在一起後的得分（此處的「預期結果」是指「兩人共識後的結果」，而非單方面的期待）。
-                    </p>
-					<p style="font-size:10px; background-color:#F8F8FF; ">
-					※本表單未經信效度檢驗，因此僅供參考，不能作為交往或分手的依據。
-					<br>
-					※本網頁程式僅使用HTML、CSS、Javascript語法撰寫，無資料蒐集之疑慮。
-					</p>
-
-			        <h3 class="tm-section-header">愛之語占比</h3>
-					<p>
-                    請先輸入個人的五種愛之語占比：				
-					<br>
-                    (您可以透過<a href="http://love.cssa.org.tw/" target="_blank">love.cssa.org.tw</a>取得數據，或使用其他網頁的結果，換算成百分比再填入。)				
-                    </p>
-					<div class="input-group mb-3">
-					  <span class="input-group-text">寶貴的相處</span>	
-					  <input type="text" class="form-control" id="QualityTime" placeholder="Quality time" aria-label="Username">
-					  <span class="input-group-text">%</span>
-					</div>					
-					<div class="input-group mb-3">
-					  <span class="input-group-text">肯定與誇讚</span>	
-					  <input type="text" class="form-control" id="WordsOfAffirmation" placeholder="Words of affirmation" aria-label="Username">
-					  <span class="input-group-text">%</span>
-					</div>
-					<div class="input-group mb-3">
-					  <span class="input-group-text">肢體的接觸</span>	
-					  <input type="text" class="form-control" id="PhysicalTouch" placeholder="Physical touch" aria-label="Username">
-					  <span class="input-group-text">%</span>
-					</div>					
-					<div class="input-group mb-3">
-					  <span class="input-group-text">實際的服務</span>	
-					  <input type="text" class="form-control" id="ActsOfService" placeholder="Acts of service" aria-label="Username">
-					  <span class="input-group-text">%</span>
-					</div>
-					<div class="input-group mb-3">
-					  <span class="input-group-text">能得到禮物</span>	
-					  <input type="text" class="form-control" id="ReceivingGifts" placeholder="Receiving gifts" aria-label="Username">
-					  <span class="input-group-text">%</span>
-					</div>
-				</section>
+            <div id="tm-intro-img"></div>            
 
             <section class="tm-section tm-section-small">
-            	<form name="lovecalculator">	
-					<!--寶貴的相處-得分-->
-					<h2 class="tm-section-header">寶貴的相處-得分</h2>
-					<div>
-						預期/目前相處的狀態：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q1" id="Q1_1" value="2">
-						  <label class="form-check-label" for="Q11">
-							每天能聊天，雙方都樂在其中。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q1" id="Q1_2" value="1">
-						  <label class="form-check-label" for="Q12">
-							還能接受，但再多一些會更好。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q1" id="Q1_3" value="0">
-						  <label class="form-check-label" for="Q13">
-							普通，已約定給雙方自由空間。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q1" id="Q1_4" value="-1">
-						  <label class="form-check-label" for="Q14">
-							各忙各的，偶爾才會彼此關心。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q1" id="Q1_5" value="-2">
-						  <label class="form-check-label" for="Q15">
-							平常沒有什麼交集，已經麻木。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前見面的頻率：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q2" id="Q2_1" value="2">
-						  <label class="form-check-label" for="Q21">
-							每天都可以見面。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q2" id="Q2_2" value="1">
-						  <label class="form-check-label" for="Q22">
-							每週見面4~6天。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q2" id="Q2_3" value="0">
-						  <label class="form-check-label" for="Q23">
-							每週見面1~3天。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q2" id="Q2_4" value="-1">
-						  <label class="form-check-label" for="Q24">
-							每月見面1~4天。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q2" id="Q2_5" value="-2">
-						  <label class="form-check-label" for="Q25">
-							幾個月才見一面。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前相處的品質與時長：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q3" id="Q3_1" value="2">
-						  <label class="form-check-label" for="Q31">
-							不受打擾8小時以上。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q3" id="Q3_2" value="1">
-						  <label class="form-check-label" for="Q32">
-							不受打擾4~7個小時。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q3" id="Q3_3" value="0">
-						  <label class="form-check-label" for="Q33">
-							不受打擾1~3個小時。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q3" id="Q3_4" value="-1">
-						  <label class="form-check-label" for="Q34">
-							不受打擾未及1小時。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="Q3" id="Q3_5" value="-2">
-						  <label class="form-check-label" for="Q35">
-							相處時總是受到打擾。
-						  </label>
-						</div>
-					</div>				 
-		
-					<!--肯定與誇讚-得分-->			
-					<h2 class="tm-section-header">肯定與誇讚-得分</h2>
-					
-					<div>
-						預期/目前受肯定的狀態：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W1" id="W1_1" value="2">
-						  <label class="form-check-label" for="W11">
-							不管如何，我總是能得到伴侶的肯定。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W1" id="W1_2" value="1">
-						  <label class="form-check-label" for="W12">
-							伴侶會評估，在他認為對的時候肯定。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W1" id="W1_3" value="0">
-						  <label class="form-check-label" for="W13">
-							不太需要肯定，彼此都信任對方決定。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W1" id="W1_4" value="-1">
-						  <label class="form-check-label" for="W14">
-							伴侶想法主觀，會針對過錯加以批評。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W1" id="W1_5" value="-2">
-						  <label class="form-check-label" for="W15">
-							伴侶過度自負，總是否定我做的決定。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前受誇讚的狀態：	
-						<p style="font-size:10px; background-color:#F8F8FF; ">
-						※「有被批評的選項」應優先於其他選項被選擇。
-						<br>
-						例一：伴侶批評我的「思想」，即使有讚賞「外貌」、「表現」，仍不可選擇「伴侶僅讚賞外貌、思想、表現其中兩者。」
-						<br>
-						例二：伴侶讚賞「外貌」、「表現」，對「思想」不予置評，才可選擇「伴侶僅讚賞外貌、思想、表現其中兩者。」
-						</p>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W2" id="W2_1" value="2">
-						  <label class="form-check-label" for="W21">
-							伴侶總是會讚賞我的外貌、思想、表現。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W2" id="W2_2" value="1">
-						  <label class="form-check-label" for="W22">
-							伴侶僅讚賞外貌、思想、表現其中兩者。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W2" id="W2_3" value="0">
-						  <label class="form-check-label" for="W23">
-							伴侶僅讚賞外貌、思想、表現其中一者。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W2" id="W2_4" value="-1">
-						  <label class="form-check-label" for="W24">
-							伴侶常批評外貌、思想、表現其中一者。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W2" id="W2_5" value="-2">
-						  <label class="form-check-label" for="W25">
-							伴侶常批評外貌、思想、表現其中兩者。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前正增強的頻率：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W3" id="W3_1" value="2">
-						  <label class="form-check-label" for="W31">
-							每天都會得到肯定與誇讚。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W3" id="W3_2" value="1">
-						  <label class="form-check-label" for="W32">
-							只有偶爾得到肯定與誇讚。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W3" id="W3_3" value="0">
-						  <label class="form-check-label" for="W33">
-							對彼此行為舉止褒貶不一。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W3" id="W3_4" value="-1">
-						  <label class="form-check-label" for="W34">
-							偶爾受到否定與貶低居多。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="W3" id="W3_5" value="-2">
-						  <label class="form-check-label" for="W35">
-							每天都會受到否定與貶低。
-						  </label>
-						</div>
-					</div>
-					
-					<!--肢體的接觸-得分-->			
-					<h2 class="tm-section-header">肢體的接觸-得分</h2>
-					<p style="font-size:10px; background-color:#F8F8FF; ">
-                    為避免觀感不佳，使用<a href="https://zh.wikipedia.org/zh-tw/%E6%A3%92%E7%90%83%E7%9A%84%E6%80%A7%E9%9A%B1%E5%96%BB#%E7%B4%B0%E7%AF%80" target="_blank">棒球的性隱喻</a>進行描述。				
+                <h2 class="tm-section-header">使用說明</h2>
+                <div class="original-text-block">
+                    <p>
+                    本表單依照愛之語(Gary Chapman, 1998)以及愛的三因論(Sternberg, 1986)進行設計，預期可作為情侶間衡量感情的參考，主要提供資訊如下：
                     <br>
-					*一壘：Holding hands、Hug、Kiss on the cheek
+                    *將感情中「各面向得分」結合個人的「愛之語占比」，換算出當下對於愛的滿足程度。
                     <br>
-					*二壘：French kiss、Touch body
-					<br>
-					*三壘：Mutual masturbation
-					<br>
-					*全壘打：Sex
+                    *依據感情中各面向的得分，類推情侶屬於哪一種「愛的類型」。
+                    <br>
+                    *您可以在相處過程中階段性地施測，並妥善利用瀏覽器的「列印」功能，將雙方在感情當中對於愛的期待做成紀錄，以便日後檢視、反思。
+                    <br>
+                    *亦可將選項作為「預期結果」，來評估在一起後的得分（此處的「預期結果」是指「兩人共識後的結果」，而非單方面的期待）。
                     </p>
-					<div>
-						預期/目前肢體接觸的狀態：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P1" id="P1_1" value="2">
-						  <label class="form-check-label" for="P11">
-							滿意目前的壘數，不用/不能更進一步了。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P1" id="P1_2" value="1">
-						  <label class="form-check-label" for="P12">
-							目前壘數尚可，可以的話希望更進一步。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P1" id="P1_3" value="0">
-						  <label class="form-check-label" for="P13">
-							同壘包待許久，和伴侶鮮少談論這一塊。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P1" id="P1_4" value="-1">
-						  <label class="form-check-label" for="P14">
-							目前壘數不夠，非常希望能夠更進一步。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P1" id="P1_5" value="-2">
-						  <label class="form-check-label" for="P15">
-							不滿目前壘數，但伴侶沒意願一起跑壘。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前肢體接觸的頻率：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P2" id="P2_1" value="2">
-						  <label class="form-check-label" for="P21">
-							每天都可以跑到滿意的壘數。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P2" id="P2_2" value="1">
-						  <label class="form-check-label" for="P22">
-							每週至少一次到滿意的壘數。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P2" id="P2_3" value="0">
-						  <label class="form-check-label" for="P23">
-							每月至少一次到滿意的壘數。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P2" id="P2_4" value="-1">
-						  <label class="form-check-label" for="P24">
-							數個月才到滿意的壘數一次。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P2" id="P2_5" value="-2">
-						  <label class="form-check-label" for="P25">
-							已經很久沒有跑壘了！！！！
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前肢體接觸的品質：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P3" id="P3_1" value="2">
-						  <label class="form-check-label" for="P31">
-							自己在壘上的癖好可以被滿足。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P3" id="P3_2" value="1">
-						  <label class="form-check-label" for="P32">
-							伴侶有意願磨合在壘上的癖好。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P3" id="P3_3" value="0">
-						  <label class="form-check-label" for="P33">
-							有到滿意壘數，但已食之無味。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P3" id="P3_4" value="-1">
-						  <label class="form-check-label" for="P34">
-							對於壘上的互動有感覺在將就。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="P3" id="P3_5" value="-2">
-						  <label class="form-check-label" for="P35">
-							對於壘上的互動已產生厭惡感。
-						  </label>
-						</div>
-					</div>
+                    <p class="note-box">
+                    ※本表單未經信效度檢驗，因此僅供參考，不能作為交往或分手的依據。
+                    <br>
+                    ※本網頁程式僅使用HTML、CSS、Javascript語法撰寫，無資料蒐集之疑慮。
+                    </p>
+                </div>
 
-					<!--實際的服務-得分-->			
-					<h2 class="tm-section-header">實際的服務-得分</h2>
-					<div>
-						預期/目前彼此實際服務的狀態：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A1" id="A1_1" value="2">
-						  <label class="form-check-label" for="A11">
-							食衣住行育樂的需求都被無微不至地呵護。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A1" id="A1_2" value="1">
-						  <label class="form-check-label" for="A12">
-							食衣住行育樂有3~5項因對方服務而滿足。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A1" id="A1_3" value="0">
-						  <label class="form-check-label" for="A13">
-							食衣住行育樂很平衡地因相互服務而滿足。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A1" id="A1_4" value="-1">
-						  <label class="form-check-label" for="A14">
-							食衣住行育樂有3、4項在這段感情需額外付出。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A1" id="A1_5" value="-2">
-						  <label class="form-check-label" for="A15">
-							食衣住行育樂有5項以上在這段感情需額外付出。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前彼此實際服務的頻率：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A2" id="A2_1" value="2">
-						  <label class="form-check-label" for="A21">
-							伴侶每天依我的需求給予服務。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A2" id="A2_2" value="1">
-						  <label class="form-check-label" for="A22">
-							伴侶會固定每週服務我幾件事。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A2" id="A2_3" value="0">
-						  <label class="form-check-label" for="A23">
-							自給自足，不常需要對方服務。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A2" id="A2_4" value="-1">
-						  <label class="form-check-label" for="A24">
-							服務伴侶已耗費部分私人時間。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A2" id="A2_5" value="-2">
-						  <label class="form-check-label" for="A25">
-							費心服務伴侶讓我焦頭爛額了。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前實際服務的品質：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A3" id="A3_1" value="2">
-						  <label class="form-check-label" for="A31">
-							受到的服務出乎意料的高規格。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A3" id="A3_2" value="1">
-						  <label class="form-check-label" for="A32">
-							受到的服務略高於平均的水準。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A3" id="A3_3" value="0">
-						  <label class="form-check-label" for="A33">
-							受到的服務只算例行公事而已。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A3" id="A3_4" value="-1">
-						  <label class="form-check-label" for="A34">
-							受到的服務是我主動要求來的。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="A3" id="A3_5" value="-2">
-						  <label class="form-check-label" for="A35">
-							寧缺勿濫，不求伴侶的服務了。
-						  </label>
-						</div>
-					</div>
-		
-					<!--能得到禮物-得分-->			
-					<h2 class="tm-section-header">能得到禮物-得分</h2>
-					<div>
-						預期/目前得到禮物的狀態：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R1" id="R1_1" value="2">
-						  <label class="form-check-label" for="R11">
-							需求被細心記下，因此常有驚喜小禮。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R1" id="R1_2" value="1">
-						  <label class="form-check-label" for="R12">
-							不會費心力準備，但想到會順手送禮。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R1" id="R1_3" value="0">
-						  <label class="form-check-label" for="R13">
-							除非對方開口要，否則不用主動送禮。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R1" id="R1_4" value="-1">
-						  <label class="form-check-label" for="R14">
-							要再三叮囑，對方才會知道要送禮物。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R1" id="R1_5" value="-2">
-						  <label class="form-check-label" for="R15">
-							長時間一再請託，對方依然聽而不聞。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前得到禮物的頻率：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R2" id="R2_1" value="2">
-						  <label class="form-check-label" for="R21">
-							伴侶每天給我貼心又驚喜的禮物。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R2" id="R2_2" value="1">
-						  <label class="form-check-label" for="R22">
-							伴侶偶爾給我貼心又驚喜的禮物。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R2" id="R2_3" value="0">
-						  <label class="form-check-label" for="R23">
-							已經約定好，只有特別節日送禮。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R2" id="R2_4" value="-1">
-						  <label class="form-check-label" for="R24">
-							只在對兩人重大意義的節日送禮。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R2" id="R2_5" value="-2">
-						  <label class="form-check-label" for="R25">
-							對方還記得要送禮就已經不錯了。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前得到禮物的品質：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R3" id="R3_1" value="2">
-						  <label class="form-check-label" for="R31">
-							得到的禮物費心費時費力費錢。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R3" id="R3_2" value="1">
-						  <label class="form-check-label" for="R32">
-							僅費心費時費錢費力其中三項。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R3" id="R3_3" value="0">
-						  <label class="form-check-label" for="R33">
-							僅費心費時費錢費力任一兩項。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R3" id="R3_4" value="-1">
-						  <label class="form-check-label" for="R34">
-							送的禮物沒有對應到我的需求。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="R3" id="R3_5" value="-2">
-						  <label class="form-check-label" for="R35">
-							明顯是完全沒誠意的敷衍送禮。
-						  </label>
-						</div>
-					</div>		
+                <hr class="my-5">
 
-					<!--決定與承諾-得分-->			
-					<h2 class="tm-section-header">決定與承諾-得分</h2>
-					<div>
-						預期/目前決定與承諾的狀態：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D1" id="D1_1" value="2">
-						  <label class="form-check-label" for="D11">
-							雙方將彼此的存在公之於親人、友人。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D1" id="D1_2" value="1">
-						  <label class="form-check-label" for="D12">
-							雙方只有公之於親人、友人其中一者。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D1" id="D1_3" value="0">
-						  <label class="form-check-label" for="D13">
-							雙方尚未將這段戀人關係告訴任何人。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D1" id="D1_4" value="-1">
-						  <label class="form-check-label" for="D14">
-							曖昧狀態，仍處在好友以上戀人未滿。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D1" id="D1_5" value="-2">
-						  <label class="form-check-label" for="D15">
-							只有單方面暗戀，雙方僅是普通朋友。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前決定與承諾履行程度：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D2" id="D2_1" value="2">
-						  <label class="form-check-label" for="D21">
-							只要說過的承諾，即使徒生變故，仍會履行。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D2" id="D2_2" value="1">
-						  <label class="form-check-label" for="D22">
-							若徒生變故，尊重伴侶意見決定是否要履行。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D2" id="D2_3" value="0">
-						  <label class="form-check-label" for="D23">
-							視現實面，衡量雙方最有益的方案履行承諾。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D2" id="D2_4" value="-1">
-						  <label class="form-check-label" for="D24">
-							以自身利益為優先來考量是否履行感情承諾。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D2" id="D2_5" value="-2">
-						  <label class="form-check-label" for="D25">
-							感情中的承諾對我們而言只是花言巧語而已。
-						  </label>
-						</div>
-					</div>
-					<br>
-					<div>
-						預期/目前決定與承諾的忠誠度：				
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D3" id="D3_1" value="2">
-						  <label class="form-check-label" for="D31">
-							既然答應與現任交往，往後遇到條件更好的對象也不會考慮。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D3" id="D3_2" value="1">
-						  <label class="form-check-label" for="D32">
-							雖然有伴侶，但處不好會試圖與伴侶溝通，給雙方交友空間。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D3" id="D3_3" value="0">
-						  <label class="form-check-label" for="D33">
-							雖然有伴侶，但處不好又遇到更心儀的人，會默默先當朋友。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D3" id="D3_4" value="-1">
-						  <label class="form-check-label" for="D34">
-							雖然有伴侶，但處不好又遇到更心儀的人，會示好並搞曖昧。
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="D3" id="D3_5" value="-2">
-						  <label class="form-check-label" for="D35">
-							雖然有伴侶，但處不好的話，會開始找其他對象並發展關係。
-						  </label>
-						</div>
-					</div>
-		
-				<center><button class="button button1" type="button" onclick="CalculateLove()">計算</button></center>
-					
-				</form>
-				
-				<p style="font-size:10px; background-color:#F8F8FF; ">
-                計分方法：				
-                <br>
-				(1)先取得各項愛之語的占比。
-                <br>
-				(2)針對各面向的「狀態」、「頻率」、「品質」等進行評分。
-				<br>
-				(3)每題有五個選項，分數由低到高分別為：-2、-1、0、1、2分。
-				<br>
-				(4)將各面向得分與該面向占比相乘，獲得「換算分數」。
-				<br>
-				例：「寶貴的相處」占20%，原始分數為5分，換算分數即為5×0.2=1分。
-				<br>
-				(5)將所有換算分數加總即為您的感情得分。
-				<br>
-				※您可以參考結果，了解感情中欠缺的元素，以便改善關係。
-                </p>
-				
-				<div id="result" style="text-align:center"></div>
-				<div id="point" style="text-align:center"></div>
+                <!-- 愛之語測驗區塊 -->
+                <h3 class="tm-section-header">步驟一：愛之語占比</h3>
+                
+                <p>請先輸入個人的五種愛之語占比：<br>(您可以直接填寫下方欄位，或是點擊按鈕進行測驗，系統會自動填入結果。)</p>
+                
+                <div class="quiz-container">
+                    <h5 class="text-center" style="color: var(--accent-color);">不知道自己的愛之語？</h5>
+                    <div class="text-center mt-3">
+                        <button class="btn btn-outline-custom" id="toggleQuizBtn" onclick="toggleQuiz()">
+                            <i class="fas fa-clipboard-list"></i> 點此進行「愛的五種語言測驗」
+                        </button>
+                    </div>
 
-				<div><canvas id="LoveChart"></canvas></div> <!--柱狀圖-->
-				
-				<br>
-				<p style="font-size:10px; background-color:#F8F8FF; ">
-                愛的三角繪製方法：				
-                <br>
-				(1)先取得各項愛之語的原始分數。
-                <br>
-				(2)因為雷達圖無法顯示負數，故將每一題原始分數加上2分，每一題得分由低到高變為：0、1、2、3、4分。
-				<br>
-				(3)將「寶貴的相處-得分」、「肯定與誇讚-得分」、「實際的服務-得分」、「能得到禮物-得分」歸類為「親密」，將其分數加總後平均。
-				<br>
-				(4)將「決定與承諾-得分」視為「決定/承諾」。
-				<br>
-				(5)將「肢體的接觸-得分」視為「激情」。
-				<br>
-				(6)各面向得分由低到高為0~12分，將結果以雷達圖呈現。
-				<br>
-				※您可以參考<a href="https://zh.wikipedia.org/zh-tw/%E7%88%B1%E6%83%85%E4%B8%89%E5%9B%A0%E8%AE%BA#%E7%88%B1%E7%9A%84%E7%B1%BB%E5%9E%8B" target="_blank">維基百科</a>，了解這段感情比較屬於何種類型的愛，簡而言之，越趨向「正三角形」，代表這段感情越接近完美的愛情，三角形的大小也代表戀愛程度的強弱。
-                </p>				
-				
-				<br>
-				<div><canvas id="chartRadar"></canvas></div><!--雷達圖-->
+                    <div id="quiz-wrapper" class="hidden mt-4">
+                        <!-- 測驗起始畫面 -->
+                        <div id="start-screen" class="text-center">
+                            <p class="small text-muted">共有 30 道題目，請選擇當下直覺「更喜歡」的選項。</p>
+                            <button class="btn btn-custom" onclick="startQuiz()">開始測驗</button>
+                        </div>
 
+                        <!-- 測驗進行中 -->
+                        <div id="quiz-screen" class="hidden">
+                            <div class="progress-container">
+                                <div class="progress-bar" id="progress-bar"></div>
+                            </div>
+                            <p id="question-number" class="text-center text-muted small">第 1 題 / 共 30 題</p>
+                            
+                            <button class="option-btn" id="option1" onclick="selectOption(1)">選項 A</button>
+                            <button class="option-btn" id="option2" onclick="selectOption(2)">選項 B</button>
+                        </div>
 
-				</section>
-            	
-		</div>
-		<br>
-		<footer style="text-align:center">
-        <p class="tm-text-white tm-footer-text" style="font-size:6px">
-          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">現代八字帖</span>由<a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/qiu-xuesheng/bazitie" property="cc:attributionName" rel="cc:attributionURL">qiuxuesheng</a>製作<br>以<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">創用CC 姓名標示-非商業性-相同方式分享 4.0 國際 授權條款</a>釋出。
-        </p>
-		<p class="tm-text-white tm-footer-text" style="font-size:6px">
-		有任何建議與回饋歡迎<a href="mailto:ntcucpu@gmail.com" class="tm-contact-link">與我聯絡</a>！
-		</p>
+                        <!-- 測驗結果 -->
+                        <div id="result-screen" class="hidden text-center">
+                            <h4>測驗完成！</h4>
+                            <p class="text-muted">結果已自動填入下方的表單中。</p>
+                            
+                            <div class="chart-wrapper">
+                                <canvas id="quizResultChart"></canvas>
+                            </div>
+                            <div id="result-details" class="mt-3 text-start"></div>
+                            
+                            <div class="mt-4">
+                                <button class="btn btn-outline-secondary btn-sm" onclick="restartQuiz()">重新測驗</button>
+                                <button class="btn btn-custom btn-sm" onclick="toggleQuiz()">收起測驗</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 愛之語占比輸入欄位 -->
+                <div id="loveLanguageInputs">
+                    <div class="input-group mb-3">
+                    <span class="input-group-text">寶貴的相處 (Quality Time)</span>    
+                    <input type="number" class="form-control" id="QualityTime" placeholder="0" min="0" max="100">
+                    <span class="input-group-text">%</span>
+                    </div>                  
+                    <div class="input-group mb-3">
+                    <span class="input-group-text">肯定與誇讚 (Words of Affirmation)</span>  
+                    <input type="number" class="form-control" id="WordsOfAffirmation" placeholder="0" min="0" max="100">
+                    <span class="input-group-text">%</span>
+                    </div>
+                    <div class="input-group mb-3">
+                    <span class="input-group-text">肢體的接觸 (Physical Touch)</span>   
+                    <input type="number" class="form-control" id="PhysicalTouch" placeholder="0" min="0" max="100">
+                    <span class="input-group-text">%</span>
+                    </div>                  
+                    <div class="input-group mb-3">
+                    <span class="input-group-text">實際的服務 (Acts of Service)</span>   
+                    <input type="number" class="form-control" id="ActsOfService" placeholder="0" min="0" max="100">
+                    <span class="input-group-text">%</span>
+                    </div>
+                    <div class="input-group mb-3">
+                    <span class="input-group-text">能得到禮物 (Receiving Gifts)</span>    
+                    <input type="number" class="form-control" id="ReceivingGifts" placeholder="0" min="0" max="100">
+                    <span class="input-group-text">%</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="tm-section tm-section-small">
+                <form name="lovecalculator" id="loveForm">    
+                    
+                    <!-- 寶貴的相處 -->
+                    <h2 class="tm-section-header">步驟二：現況評估</h2>
+                    
+                    <h4 class="mt-4">寶貴的相處-得分</h4>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前相處的狀態：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q1" value="2" id="Q1_1"><label class="form-check-label" for="Q1_1">每天能聊天，雙方都樂在其中。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q1" value="1" id="Q1_2"><label class="form-check-label" for="Q1_2">還能接受，但再多一些會更好。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q1" value="0" id="Q1_3"><label class="form-check-label" for="Q1_3">普通，已約定給雙方自由空間。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q1" value="-1" id="Q1_4"><label class="form-check-label" for="Q1_4">各忙各的，偶爾才會彼此關心。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q1" value="-2" id="Q1_5"><label class="form-check-label" for="Q1_5">平常沒有什麼交集，已經麻木。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前見面的頻率：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q2" value="2" id="Q2_1"><label class="form-check-label" for="Q2_1">每天都可以見面。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q2" value="1" id="Q2_2"><label class="form-check-label" for="Q2_2">每週見面4~6天。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q2" value="0" id="Q2_3"><label class="form-check-label" for="Q2_3">每週見面1~3天。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q2" value="-1" id="Q2_4"><label class="form-check-label" for="Q2_4">每月見面1~4天。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q2" value="-2" id="Q2_5"><label class="form-check-label" for="Q2_5">幾個月才見一面。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前相處的品質與時長：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q3" value="2" id="Q3_1"><label class="form-check-label" for="Q3_1">不受打擾8小時以上。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q3" value="1" id="Q3_2"><label class="form-check-label" for="Q3_2">不受打擾4~7個小時。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q3" value="0" id="Q3_3"><label class="form-check-label" for="Q3_3">不受打擾1~3個小時。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q3" value="-1" id="Q3_4"><label class="form-check-label" for="Q3_4">不受打擾未及1小時。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="Q3" value="-2" id="Q3_5"><label class="form-check-label" for="Q3_5">相處時總是受到打擾。</label></div>
+                    </div>
+
+                    <!-- 肯定與誇讚 -->
+                    <h4 class="mt-4">肯定與誇讚-得分</h4>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前受肯定的狀態：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W1" value="2" id="W1_1"><label class="form-check-label" for="W1_1">不管如何，我總是能得到伴侶的肯定。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W1" value="1" id="W1_2"><label class="form-check-label" for="W1_2">伴侶會評估，在他認為對的時候肯定。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W1" value="0" id="W1_3"><label class="form-check-label" for="W1_3">不太需要肯定，彼此都信任對方決定。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W1" value="-1" id="W1_4"><label class="form-check-label" for="W1_4">伴侶想法主觀，會針對過錯加以批評。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W1" value="-2" id="W1_5"><label class="form-check-label" for="W1_5">伴侶過度自負，總是否定我做的決定。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前受誇讚的狀態：</label>
+                        <div class="note-box">
+                            ※「有被批評的選項」應優先於其他選項被選擇。<br>
+                            例一：伴侶批評我的「思想」，即使有讚賞「外貌」、「表現」，仍不可選擇「伴侶僅讚賞外貌、思想、表現其中兩者。」<br>
+                            例二：伴侶讚賞「外貌」、「表現」，對「思想」不予置評，才可選擇「伴侶僅讚賞外貌、思想、表現其中兩者。」
+                        </div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W2" value="2" id="W2_1"><label class="form-check-label" for="W2_1">伴侶總是會讚賞我的外貌、思想、表現。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W2" value="1" id="W2_2"><label class="form-check-label" for="W2_2">伴侶僅讚賞外貌、思想、表現其中兩者。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W2" value="0" id="W2_3"><label class="form-check-label" for="W2_3">伴侶僅讚賞外貌、思想、表現其中一者。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W2" value="-1" id="W2_4"><label class="form-check-label" for="W2_4">伴侶常批評外貌、思想、表現其中一者。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W2" value="-2" id="W2_5"><label class="form-check-label" for="W2_5">伴侶常批評外貌、思想、表現其中兩者。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前正增強的頻率：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W3" value="2" id="W3_1"><label class="form-check-label" for="W3_1">每天都會得到肯定與誇讚。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W3" value="1" id="W3_2"><label class="form-check-label" for="W3_2">只有偶爾得到肯定與誇讚。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W3" value="0" id="W3_3"><label class="form-check-label" for="W3_3">對彼此行為舉止褒貶不一。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W3" value="-1" id="W3_4"><label class="form-check-label" for="W3_4">偶爾受到否定與貶低居多。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="W3" value="-2" id="W3_5"><label class="form-check-label" for="W3_5">每天都會受到否定與貶低。</label></div>
+                    </div>
+
+                    <!-- 肢體的接觸 -->
+                    <h4 class="mt-4">肢體的接觸-得分</h4>
+                    <div class="note-box">
+                        為避免觀感不佳，使用<a href="https://zh.wikipedia.org/zh-tw/%E6%A3%92%E7%90%83%E7%9A%84%E6%80%A7%E9%9A%B1%E5%96%BB#%E7%B4%B0%E7%AF%80" target="_blank">棒球的性隱喻</a>進行描述。<br>
+                        *一壘：Holding hands、Hug、Kiss on the cheek<br>
+                        *二壘：French kiss、Touch body<br>
+                        *三壘：Mutual masturbation<br>
+                        *全壘打：Sex
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前肢體接觸的狀態：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P1" value="2" id="P1_1"><label class="form-check-label" for="P1_1">滿意目前的壘數，不用/不能更進一步了。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P1" value="1" id="P1_2"><label class="form-check-label" for="P1_2">目前壘數尚可，可以的話希望更進一步。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P1" value="0" id="P1_3"><label class="form-check-label" for="P1_3">同壘包待許久，和伴侶鮮少談論這一塊。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P1" value="-1" id="P1_4"><label class="form-check-label" for="P1_4">目前壘數不夠，非常希望能夠更進一步。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P1" value="-2" id="P1_5"><label class="form-check-label" for="P1_5">不滿目前壘數，但伴侶沒意願一起跑壘。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前肢體接觸的頻率：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P2" value="2" id="P2_1"><label class="form-check-label" for="P2_1">每天都可以跑到滿意的壘數。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P2" value="1" id="P2_2"><label class="form-check-label" for="P2_2">每週至少一次到滿意的壘數。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P2" value="0" id="P2_3"><label class="form-check-label" for="P2_3">每月至少一次到滿意的壘數。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P2" value="-1" id="P2_4"><label class="form-check-label" for="P2_4">數個月才到滿意的壘數一次。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P2" value="-2" id="P2_5"><label class="form-check-label" for="P2_5">已經很久沒有跑壘了！！！！</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前肢體接觸的品質：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="2" id="P3_1"><label class="form-check-label" for="P3_1">自己在壘上的癖好可以被滿足。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="1" id="P3_2"><label class="form-check-label" for="P3_2">伴侶有意願磨合在壘上的癖好。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="0" id="P3_3"><label class="form-check-label" for="P3_3">有到滿意壘數，但已食之無味。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="-1" id="P3_4"><label class="form-check-label" for="P3_4">對於壘上的互動有感覺在將就。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="-2" id="P3_5"><label class="form-check-label" for="P3_5">對於壘上的互動已產生厭惡感。</label></div>
+                    </div>
+
+                    <!-- 實際的服務 -->
+                    <h4 class="mt-4">實際的服務-得分</h4>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前彼此實際服務的狀態：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A1" value="2" id="A1_1"><label class="form-check-label" for="A1_1">食衣住行育樂的需求都被無微不至地呵護。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A1" value="1" id="A1_2"><label class="form-check-label" for="A1_2">食衣住行育樂有3~5項因對方服務而滿足。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A1" value="0" id="A1_3"><label class="form-check-label" for="A1_3">食衣住行育樂很平衡地因相互服務而滿足。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A1" value="-1" id="A1_4"><label class="form-check-label" for="A1_4">食衣住行育樂有3、4項在這段感情需額外付出。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A1" value="-2" id="A1_5"><label class="form-check-label" for="A1_5">食衣住行育樂有5項以上在這段感情需額外付出。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前彼此實際服務的頻率：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A2" value="2" id="A2_1"><label class="form-check-label" for="A2_1">伴侶每天依我的需求給予服務。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A2" value="1" id="A2_2"><label class="form-check-label" for="A2_2">伴侶會固定每週服務我幾件事。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A2" value="0" id="A2_3"><label class="form-check-label" for="A2_3">自給自足，不常需要對方服務。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A2" value="-1" id="A2_4"><label class="form-check-label" for="A2_4">服務伴侶已耗費部分私人時間。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A2" value="-2" id="A2_5"><label class="form-check-label" for="A2_5">費心服務伴侶讓我焦頭爛額了。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前實際服務的品質：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A3" value="2" id="A3_1"><label class="form-check-label" for="A3_1">受到的服務出乎意料的高規格。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A3" value="1" id="A3_2"><label class="form-check-label" for="A3_2">受到的服務略高於平均的水準。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A3" value="0" id="A3_3"><label class="form-check-label" for="A3_3">受到的服務只算例行公事而已。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A3" value="-1" id="A3_4"><label class="form-check-label" for="A3_4">受到的服務是我主動要求來的。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="A3" value="-2" id="A3_5"><label class="form-check-label" for="A3_5">寧缺勿濫，不求伴侶的服務了。</label></div>
+                    </div>
+
+                    <!-- 能得到禮物 -->
+                    <h4 class="mt-4">能得到禮物-得分</h4>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前得到禮物的狀態：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R1" value="2" id="R1_1"><label class="form-check-label" for="R1_1">需求被細心記下，因此常有驚喜小禮。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R1" value="1" id="R1_2"><label class="form-check-label" for="R1_2">不會費心力準備，但想到會順手送禮。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R1" value="0" id="R1_3"><label class="form-check-label" for="R1_3">除非對方開口要，否則不用主動送禮。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R1" value="-1" id="R1_4"><label class="form-check-label" for="R1_4">要再三叮囑，對方才會知道要送禮物。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R1" value="-2" id="R1_5"><label class="form-check-label" for="R1_5">長時間一再請託，對方依然聽而不聞。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前得到禮物的頻率：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R2" value="2" id="R2_1"><label class="form-check-label" for="R2_1">伴侶每天給我貼心又驚喜的禮物。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R2" value="1" id="R2_2"><label class="form-check-label" for="R2_2">伴侶偶爾給我貼心又驚喜的禮物。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R2" value="0" id="R2_3"><label class="form-check-label" for="R2_3">已經約定好，只有特別節日送禮。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R2" value="-1" id="R2_4"><label class="form-check-label" for="R2_4">只在對兩人重大意義的節日送禮。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R2" value="-2" id="R2_5"><label class="form-check-label" for="R2_5">對方還記得要送禮就已經不錯了。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前得到禮物的品質：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R3" value="2" id="R3_1"><label class="form-check-label" for="R3_1">得到的禮物費心費時費力費錢。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R3" value="1" id="R3_2"><label class="form-check-label" for="R3_2">僅費心費時費錢費力其中三項。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R3" value="0" id="R3_3"><label class="form-check-label" for="R3_3">僅費心費時費錢費力任一兩項。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R3" value="-1" id="R3_4"><label class="form-check-label" for="R3_4">送的禮物沒有對應到我的需求。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="R3" value="-2" id="R3_5"><label class="form-check-label" for="R3_5">明顯是完全沒誠意的敷衍送禮。</label></div>
+                    </div>      
+
+                    <!-- 決定與承諾 -->
+                    <h4 class="mt-4">決定與承諾-得分</h4>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前決定與承諾的狀態：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D1" value="2" id="D1_1"><label class="form-check-label" for="D1_1">雙方將彼此的存在公之於親人、友人。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D1" value="1" id="D1_2"><label class="form-check-label" for="D1_2">雙方只有公之於親人、友人其中一者。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D1" value="0" id="D1_3"><label class="form-check-label" for="D1_3">雙方尚未將這段戀人關係告訴任何人。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D1" value="-1" id="D1_4"><label class="form-check-label" for="D1_4">曖昧狀態，仍處在好友以上戀人未滿。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D1" value="-2" id="D1_5"><label class="form-check-label" for="D1_5">只有單方面暗戀，雙方僅是普通朋友。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前決定與承諾履行程度：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D2" value="2" id="D2_1"><label class="form-check-label" for="D2_1">只要說過的承諾，即使徒生變故，仍會履行。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D2" value="1" id="D2_2"><label class="form-check-label" for="D2_2">若徒生變故，尊重伴侶意見決定是否要履行。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D2" value="0" id="D2_3"><label class="form-check-label" for="D2_3">視現實面，衡量雙方最有益的方案履行承諾。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D2" value="-1" id="D2_4"><label class="form-check-label" for="D2_4">以自身利益為優先來考量是否履行感情承諾。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D2" value="-2" id="D2_5"><label class="form-check-label" for="D2_5">感情中的承諾對我們而言只是花言巧語而已。</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">預期/目前決定與承諾的忠誠度：</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D3" value="2" id="D3_1"><label class="form-check-label" for="D3_1">既然答應與現任交往，往後遇到條件更好的對象也不會考慮。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D3" value="1" id="D3_2"><label class="form-check-label" for="D3_2">雖然有伴侶，但處不好會試圖與伴侶溝通，給雙方交友空間。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D3" value="0" id="D3_3"><label class="form-check-label" for="D3_3">雖然有伴侶，但處不好又遇到更心儀的人，會默默先當朋友。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D3" value="-1" id="D3_4"><label class="form-check-label" for="D3_4">雖然有伴侶，但處不好又遇到更心儀的人，會示好並搞曖昧。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="D3" value="-2" id="D3_5"><label class="form-check-label" for="D3_5">雖然有伴侶，但處不好的話，會開始找其他對象並發展關係。</label></div>
+                    </div>
+        
+                    <div class="text-center mt-5">
+                        <button class="btn btn-custom btn-lg" type="button" onclick="CalculateLove()">計算感情分數</button>
+                    </div>
+                    
+                </form>
+                
+                <div class="note-box mt-4">
+                    計分方法：<br>
+                    (1)先取得各項愛之語的占比。<br>
+                    (2)針對各面向的「狀態」、「頻率」、「品質」等進行評分。<br>
+                    (3)每題有五個選項，分數由低到高分別為：-2、-1、0、1、2分。<br>
+                    (4)將各面向得分與該面向占比相乘，獲得「換算分數」。<br>
+                    例：「寶貴的相處」占20%，原始分數為5分，換算分數即為5×0.2=1分。<br>
+                    (5)將所有換算分數加總即為您的感情得分。<br>
+                    ※您可以參考結果，了解感情中欠缺的元素，以便改善關係。
+                </div>
+                
+                <div id="result" class="h4 text-center mt-4 fw-bold" style="color: var(--accent-color);"></div>
+                <div id="point" class="text-center mt-3 lh-lg"></div>
+
+                <!-- 新增：權重比較圖 (重疊柱狀圖) -->
+                <div class="chart-wrapper mt-4">
+                    <canvas id="WeightedChart"></canvas>
+                </div>
+
+                <div class="chart-wrapper mt-5">
+                    <canvas id="LoveChart"></canvas>
+                </div> <!-- 原始分數柱狀圖 -->
+                
+                <hr class="my-5">
+
+                <h3 class="tm-section-header">愛的三角理論分析</h3>
+                <div class="note-box">
+                    愛的三角繪製方法：<br>
+                    (1)先取得各項愛之語的原始分數。<br>
+                    (2)因為雷達圖無法顯示負數，故將每一題原始分數加上2分，每一題得分由低到高變為：0、1、2、3、4分。<br>
+                    (3)將「寶貴的相處-得分」、「肯定與誇讚-得分」、「實際的服務-得分」、「能得到禮物-得分」歸類為「親密」，將其分數加總後平均。<br>
+                    (4)將「決定與承諾-得分」視為「決定/承諾」。<br>
+                    (5)將「肢體的接觸-得分」視為「激情」。<br>
+                    (6)各面向得分由低到高為0~12分，將結果以雷達圖呈現。<br>
+                    ※您可以參考<a href="https://zh.wikipedia.org/zh-tw/%E7%88%B1%E6%83%85%E4%B8%89%E5%9B%A0%E8%AE%BA#%E7%88%B1%E7%9A%84%E7%B1%BB%E5%9E%8B" target="_blank">維基百科</a>，了解這段感情比較屬於何種類型的愛，簡而言之，越趨向「正三角形」，代表這段感情越接近完美的愛情，三角形的大小也代表戀愛程度的強弱。
+                </div>              
+                
+                <div class="chart-wrapper">
+                    <canvas id="chartRadar"></canvas>
+                </div> <!-- 雷達圖 -->
+
+                <!-- 新增列印按鈕 -->
+                <div class="text-center mt-5 mb-4 no-print">
+                    <button class="btn btn-outline-custom btn-lg" onclick="window.print()">
+                        <i class="fas fa-print"></i> 列印作答結果
+                    </button>
+                </div>
+
+            </section>
+                
+        </div>
+        
+        <footer class="text-center mt-5 text-muted small">
+            <p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="創用 CC 授權條款" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />
+                <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">現代八字帖</span>由
+                <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/qiu-xuesheng/bazitie" property="cc:attributionName" rel="cc:attributionURL">qiuxuesheng</a>製作
+                <br>以<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">創用CC 姓名標示-非商業性-相同方式分享 4.0 國際 授權條款</a>釋出。
+            </p>
+            <p>
+                有任何建議與回饋歡迎<a href="mailto:ntcucpu@gmail.com" class="tm-contact-link">與我聯絡</a>！
+            </p>
         </footer>
-	</div>
+    </div>
+
+    <!-- JavaScript 邏輯區 -->
+    <script>
+        /*************************************************
+         * 第一部分：愛之語測驗邏輯
+         *************************************************/
+        
+        const typeMapping = {
+            'A': { name: '肯定的言語', inputId: 'WordsOfAffirmation' },
+            'B': { name: '精心時刻', inputId: 'QualityTime' },
+            'C': { name: '接受禮物', inputId: 'ReceivingGifts' },
+            'D': { name: '服務的行動', inputId: 'ActsOfService' },
+            'E': { name: '身體接觸', inputId: 'PhysicalTouch' }
+        };
+
+        const questions = [
+            ["我喜歡收到伴侶寫給我的讚美小紙條。", "A", "我喜歡伴侶給我一個擁抱。", "E"],
+            ["我喜歡和伴侶單獨去一個我們都喜歡的地方。", "B", "我喜歡伴侶送我一份實用的禮物。", "C"],
+            ["當我有困難時，我希望伴侶直接幫我解決問題。", "D", "當我有困難時，我希望伴侶花時間陪我聊天。", "B"],
+            ["我喜歡伴侶牽著我的手。", "E", "我喜歡伴侶送我一個驚喜的小禮物。", "C"],
+            ["我覺得被愛，是因為伴侶主動告訴我他欣賞我。", "A", "我覺得被愛，是因為伴侶主動幫我做我不喜歡做的家事。", "D"],
+            ["我喜歡收到禮物，因為那代表他有想到我。", "C", "我喜歡伴侶常常說他很愛我。", "A"],
+            ["我喜歡兩個人一起從事某項興趣或活動。", "B", "我喜歡伴侶幫我按摩。", "E"],
+            ["我喜歡伴侶稱讚我的外表。", "A", "我喜歡伴侶注意到我的需求，並主動提供協助。", "D"],
+            ["我喜歡伴侶帶我去旅行或出遊。", "B", "我喜歡收到伴侶親手製作或挑選的禮物。", "C"],
+            ["我喜歡伴侶在出門或回家時親吻我。", "E", "我喜歡伴侶幫我跑腿或處理雜事。", "D"],
+            ["我喜歡伴侶告訴我，他以我為榮。", "A", "我喜歡伴侶把他的專注力都放在我身上。", "B"],
+            ["我喜歡伴侶幫我整理混亂的環境或修繕東西。", "D", "我喜歡伴侶摸摸我的頭或摟著我。", "E"],
+            ["我喜歡伴侶送我大家都覺得很棒的禮物。", "C", "我喜歡伴侶騰出時間，專程陪我做我想做的事。", "B"],
+            ["我覺得只要在他身邊，稍微靠著他，我就很安心。", "E", "我覺得只要聽到他鼓勵的話，我就很有動力。", "A"],
+            ["我喜歡伴侶主動幫我分擔忙不過來的工作。", "D", "我喜歡伴侶送我禮物，即使不是什麼特殊的日子。", "C"],
+            ["我喜歡伴侶走路時牽著我的手。", "E", "我喜歡伴侶專注地聽我說話，不滑手機。", "B"],
+            ["我喜歡伴侶在他人面前稱讚我。", "A", "我喜歡伴侶幫我準備愛心便當或消夜。", "D"],
+            ["我喜歡收到紀念性的禮物。", "C", "我喜歡伴侶過來抱抱我。", "E"],
+            ["我喜歡伴侶為了幫我，而犧牲他自己的時間。", "D", "我喜歡和伴侶規劃一起度過的週末。", "B"],
+            ["我喜歡伴侶對我說甜言蜜語。", "A", "我喜歡伴侶送我曾經提過想要的東西。", "C"],
+            ["我喜歡伴侶全神貫注地看著我的眼睛說話。", "B", "我喜歡伴侶幫我處理那些繁瑣的帳單或行政事務。", "D"],
+            ["我喜歡伴侶送我禮物，這代表我很重要。", "C", "我喜歡伴侶在看電視或電影時，依偎在我身邊。", "E"],
+            ["我喜歡伴侶寫信或傳訊息告訴我他愛我。", "A", "我喜歡伴侶送我一份我一直捨不得買的禮物。", "C"],
+            ["我喜歡伴侶在我累的時候，主動接手我的工作。", "D", "我喜歡伴侶不趕時間，耐心地聽我發牢騷。", "B"],
+            ["我喜歡伴侶給我深情的擁抱。", "E", "我喜歡伴侶幫我洗車、洗碗或倒垃圾。", "D"],
+            ["我喜歡伴侶稱讚我的才華或能力。", "A", "我喜歡伴侶送我一個小禮物，讓我知道他在想我。", "C"],
+            ["我喜歡伴侶願意放下手邊的事，專心陪我。", "B", "我喜歡伴侶經常跟我有肢體接觸。", "E"],
+            ["我喜歡伴侶幫我做那些我很討厭做的事。", "D", "我喜歡伴侶說我很特別。", "A"],
+            ["我喜歡伴侶在特別的節日送我禮物。", "C", "我喜歡和伴侶一起去散步談心。", "B"],
+            ["我喜歡伴侶每天都擁抱我。", "E", "我喜歡伴侶每天都對我說鼓勵的話。", "A"]
+        ];
+
+        let currentQuestionIndex = 0;
+        let quizScores = { 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0 };
+        let quizChartInstance = null;
+
+        function toggleQuiz() {
+            const quizWrapper = document.getElementById('quiz-wrapper');
+            const btn = document.getElementById('toggleQuizBtn');
+            if (quizWrapper.classList.contains('hidden')) {
+                quizWrapper.classList.remove('hidden');
+                btn.innerHTML = '<i class="fas fa-angle-up"></i> 收合 愛之語測驗';
+            } else {
+                quizWrapper.classList.add('hidden');
+                btn.innerHTML = '<i class="fas fa-clipboard-list"></i> 點此進行「愛的五種語言測驗」';
+            }
+        }
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            currentQuestionIndex = 0;
+            quizScores = { 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0 };
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestionIndex];
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('question-number').innerText = `第 ${currentQuestionIndex + 1} 題 / 共 ${questions.length} 題`;
+
+            const btn1 = document.getElementById('option1');
+            const btn2 = document.getElementById('option2');
+            
+            btn1.innerText = q[0];
+            btn2.innerText = q[2];
+            
+            btn1.dataset.type = q[1];
+            btn2.dataset.type = q[3];
+        }
+
+        function selectOption(optionNum) {
+            const selectedBtn = document.getElementById(`option${optionNum}`);
+            const type = selectedBtn.dataset.type;
+            quizScores[type]++;
+            
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            renderQuizChart();
+            renderQuizTextResult();
+            // 自動填入功能
+            applyQuizResults();
+        }
+
+        function renderQuizTextResult() {
+            const container = document.getElementById('result-details');
+            container.innerHTML = '';
+            
+            const sortedScores = Object.entries(quizScores).sort((a, b) => b[1] - a[1]);
+            
+            let html = '';
+            sortedScores.forEach(([key, score]) => {
+                const percentage = Math.round((score / 30) * 100);
+                html += `
+                    <div class="result-item">
+                        <span>${typeMapping[key].name}</span>
+                        <span>${score} 分 <span class="fw-bold">(${percentage}%)</span></span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderQuizChart() {
+            const ctx = document.getElementById('quizResultChart').getContext('2d');
+            if (quizChartInstance) quizChartInstance.destroy();
+
+            const dataValues = [quizScores.A, quizScores.B, quizScores.C, quizScores.D, quizScores.E];
+            
+            quizChartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['肯定的言語', '精心時刻', '接受禮物', '服務的行動', '身體接觸'],
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: ['#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function restartQuiz() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+
+        // 自動將測驗結果填入主表單，不需按按鈕
+        function applyQuizResults() {
+            Object.keys(quizScores).forEach(key => {
+                const percentage = Math.round((quizScores[key] / 30) * 100);
+                const inputId = typeMapping[key].inputId;
+                const inputField = document.getElementById(inputId);
+                if(inputField) {
+                    inputField.value = percentage;
+                }
+            });
+            // 提示使用者已自動填入
+            // 您可以在這裡加入 alert 或 toast 提示，但目前的文字顯示已經足夠清楚
+        }
+
+
+        /*************************************************
+         * 第二部分：八字帖計算邏輯
+         *************************************************/
+
+        let mainBarChart = null;
+        let mainWeightedChart = null; // 新增：權重比較圖變數
+        let mainRadarChart = null;
+
+        function getRadioSum(groupName) {
+            const checkedRadios = document.querySelectorAll(`input[name="${groupName}"]:checked`);
+            let sum = 0;
+            checkedRadios.forEach(radio => {
+                sum += parseInt(radio.value);
+            });
+            return sum;
+        }
+
+        function getInputValue(id) {
+            const val = document.getElementById(id).value;
+            return val ? parseInt(val) : 0;
+        }
+
+        function CalculateLove() {
+            // 取得各面向占比 (百分比)
+            const pQ = getInputValue("QualityTime") / 100;
+            const pW = getInputValue("WordsOfAffirmation") / 100;
+            const pP = getInputValue("PhysicalTouch") / 100;
+            const pA = getInputValue("ActsOfService") / 100;
+            const pR = getInputValue("ReceivingGifts") / 100;
+
+            // 取得各面向原始分數 (加總單選題得分)
+            const scoreQ_Raw = getRadioSum("Q1") + getRadioSum("Q2") + getRadioSum("Q3");
+            const scoreW_Raw = getRadioSum("W1") + getRadioSum("W2") + getRadioSum("W3");
+            const scoreP_Raw = getRadioSum("P1") + getRadioSum("P2") + getRadioSum("P3");
+            const scoreA_Raw = getRadioSum("A1") + getRadioSum("A2") + getRadioSum("A3");
+            const scoreR_Raw = getRadioSum("R1") + getRadioSum("R2") + getRadioSum("R3");
+            
+            // 決定與承諾 (獨立)
+            const scoreD_Raw = getRadioSum("D1") + getRadioSum("D2") + getRadioSum("D3");
+
+            // 計算加權分數
+            const scoreQ_Final = scoreQ_Raw * pQ;
+            const scoreW_Final = scoreW_Raw * pW;
+            const scoreP_Final = scoreP_Raw * pP;
+            const scoreA_Final = scoreA_Raw * pA;
+            const scoreR_Final = scoreR_Raw * pR;
+
+            const totalScore = scoreQ_Final + scoreW_Final + scoreP_Final + scoreA_Final + scoreR_Final;
+
+            // 顯示結果文字
+            document.getElementById("result").innerHTML = `您的感情得分：${Math.round(totalScore * 10) / 10} 分`;
+            document.getElementById("point").innerHTML = `
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered" style="color: #333;">
+                        <thead><tr class="table-light"><th>面向</th><th>原始得分 / 滿分</th><th>換算得分 / 權重滿分</th></tr></thead>
+                        <tbody>
+                            <tr><td>寶貴的相處</td><td>${scoreQ_Raw} / 6</td><td>${scoreQ_Final.toFixed(1)} / ${(6*pQ).toFixed(1)}</td></tr>
+                            <tr><td>肯定與誇讚</td><td>${scoreW_Raw} / 6</td><td>${scoreW_Final.toFixed(1)} / ${(6*pW).toFixed(1)}</td></tr>
+                            <tr><td>肢體的接觸</td><td>${scoreP_Raw} / 6</td><td>${scoreP_Final.toFixed(1)} / ${(6*pP).toFixed(1)}</td></tr>
+                            <tr><td>實際的服務</td><td>${scoreA_Raw} / 6</td><td>${scoreA_Final.toFixed(1)} / ${(6*pA).toFixed(1)}</td></tr>
+                            <tr><td>能得到禮物</td><td>${scoreR_Raw} / 6</td><td>${scoreR_Final.toFixed(1)} / ${(6*pR).toFixed(1)}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            // 新增：繪製權重比較圖 (重疊柱狀圖)
+            const weightedCtx = document.getElementById('WeightedChart').getContext('2d');
+            if (mainWeightedChart) mainWeightedChart.destroy();
+
+            mainWeightedChart = new Chart(weightedCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['寶貴的相處', '肯定與誇讚', '肢體的接觸', '實際的服務', '能得到禮物'],
+                    datasets: [
+                        {
+                            label: '權重滿分', // 背景柱（理論滿分）
+                            data: [(6*pQ), (6*pW), (6*pP), (6*pA), (6*pR)],
+                            backgroundColor: 'rgba(200, 200, 200, 0.4)',
+                            borderColor: 'rgba(200, 200, 200, 1)',
+                            borderWidth: 1,
+                            barPercentage: 1.0, // 較寬，作為背景
+                            categoryPercentage: 0.8,
+                            order: 0, // Lower order -> Drawn first -> Bottom
+                            grouped: false
+                        },
+                        {
+                            label: '換算得分', // 前景柱（實際得分）
+                            data: [scoreQ_Final, scoreW_Final, scoreP_Final, scoreA_Final, scoreR_Final],
+                            backgroundColor: 'rgba(153, 102, 51, 0.8)',
+                            borderColor: 'rgba(153, 102, 51, 1)',
+                            borderWidth: 1,
+                            barPercentage: 0.5, // 較窄，顯示於前方
+                            categoryPercentage: 0.8,
+                            order: 1, // Higher order -> Drawn later -> Top
+                            grouped: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '換算得分 vs 權重滿分'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true // 確保在同一個位置
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#eee' }
+                        }
+                    }
+                }
+            });
+
+
+            // 繪製原始分數柱狀圖
+            const barCtx = document.getElementById('LoveChart').getContext('2d');
+            if (mainBarChart) mainBarChart.destroy();
+
+            mainBarChart = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['寶貴的相處', '肯定與誇讚', '肢體的接觸', '實際的服務', '能得到禮物'],
+                    datasets: [{
+                        label: '原始分數',
+                        data: [scoreQ_Raw, scoreW_Raw, scoreP_Raw, scoreA_Raw, scoreR_Raw],
+                        backgroundColor: 'rgba(153, 102, 51, 0.6)',
+                        borderColor: 'rgba(153, 102, 51, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '各面向原始分數'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: -6,
+                            max: 6,
+                            grid: { color: '#eee' }
+                        }
+                    }
+                }
+            });
+
+            // 繪製雷達圖
+            const intimacy = (scoreQ_Raw + scoreW_Raw + scoreA_Raw + scoreR_Raw + 24) / 4; 
+            const commitment = scoreD_Raw + 6;
+            const passion = scoreP_Raw + 6;
+
+            const radarCtx = document.getElementById("chartRadar").getContext('2d');
+            if (mainRadarChart) mainRadarChart.destroy();
+
+            mainRadarChart = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ["親密", "決定/承諾", "激情"],
+                    datasets: [{
+                        label: "愛的三因論得分",
+                        data: [intimacy, commitment, passion],
+                        backgroundColor: "rgba(212,147,81,0.2)",
+                        borderColor: "rgba(212,147,81,1)",
+                        pointBackgroundColor: "rgba(212,147,81,1)",
+                        pointBorderColor: "#fff",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(212,147,81,1)"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 12,
+                            ticks: { stepSize: 2, backdropColor: 'transparent' }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
