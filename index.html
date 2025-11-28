@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Chart.js 4.x -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- D3.js v7 -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     
     <style>
         @import url(https://fonts.googleapis.com/earlyaccess/cwtexyen.css);
@@ -19,6 +21,11 @@
             --accent-hover: #b3773b;
             --card-bg: #ffffff;
             --card-text: #333333;
+
+            /* 愛的三因論顏色 */
+            --intimacy-color: #996633; /* 親密 (I): 黃褐色 */
+            --passion-color: #cc7755;  /* 激情 (P): 燒焦橘/紅赭色 */
+            --commitment-color: #7c90a1; /* 承諾 (C): 藍灰色 */
         }
 
         body {
@@ -176,10 +183,10 @@
             border-bottom: 1px dashed #ddd;
         }
 
-        /* 表單選項樣式優化 - 修正間距 */
+        /* 表單選項樣式 */
         .form-check {
-            margin-bottom: 2px; /* 縮減下邊距 */
-            padding: 5px 10px 5px 30px; /* 調整內距，縮減高度 */
+            margin-bottom: 2px;
+            padding: 5px 10px 5px 30px;
             border-radius: 5px;
             transition: background 0.2s;
             min-height: auto;
@@ -188,7 +195,7 @@
             background-color: #f8f9fa;
         }
         .form-check-input {
-             margin-left: -20px; /* Bootstrap default adjustment */
+             margin-left: -20px;
         }
         .form-check-input:checked + .form-check-label {
             color: var(--accent-color);
@@ -205,9 +212,8 @@
             font-size: 1rem;
         }
         
-        /* 修正 .note-box 字體大小 */
         .note-box {
-            font-size: 0.95rem; /* 放大字體，接近內文大小 */
+            font-size: 0.95rem;
             background-color: #F8F8FF; 
             padding: 15px; 
             border-radius: 5px;
@@ -229,6 +235,46 @@
             max-width: 600px;
         }
 
+        /* D3 視覺化樣式 */
+        #visualization {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f7f9fb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            display: block;
+            max-width: 100%;
+        }
+        .circle {
+            transition: r 0.3s ease, filter 0.3s ease, opacity 0.3s ease; 
+            stroke: #333;
+            stroke-width: 2;
+        }
+        .d3-tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 8px;
+            font: 14px sans-serif;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #333;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            color: #333;
+        }
+        #status {
+            background-color: #e9ecef;
+            color: #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
         /* 列印樣式 */
         @media print {
             .no-print, .btn, footer, .tm-page-header-container, #toggleQuizBtn, .quiz-container, #tm-intro-img {
@@ -248,7 +294,7 @@
             .tm-section {
                 padding: 20px !important;
             }
-            .chart-wrapper {
+            .chart-wrapper, #visualization, #status {
                 page-break-inside: avoid;
             }
         }
@@ -302,33 +348,22 @@
                     </div>
 
                     <div id="quiz-wrapper" class="hidden mt-4">
-                        <!-- 測驗起始畫面 -->
+                        <!-- 測驗內容 -->
                         <div id="start-screen" class="text-center">
                             <p class="small text-muted">共有 30 道題目，請選擇當下直覺「更喜歡」的選項。</p>
                             <button class="btn btn-custom" onclick="startQuiz()">開始測驗</button>
                         </div>
-
-                        <!-- 測驗進行中 -->
                         <div id="quiz-screen" class="hidden">
-                            <div class="progress-container">
-                                <div class="progress-bar" id="progress-bar"></div>
-                            </div>
+                            <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
                             <p id="question-number" class="text-center text-muted small">第 1 題 / 共 30 題</p>
-                            
                             <button class="option-btn" id="option1" onclick="selectOption(1)">選項 A</button>
                             <button class="option-btn" id="option2" onclick="selectOption(2)">選項 B</button>
                         </div>
-
-                        <!-- 測驗結果 -->
                         <div id="result-screen" class="hidden text-center">
                             <h4>測驗完成！</h4>
                             <p class="text-muted">結果已自動填入下方的表單中。</p>
-                            
-                            <div class="chart-wrapper">
-                                <canvas id="quizResultChart"></canvas>
-                            </div>
+                            <div class="chart-wrapper"><canvas id="quizResultChart"></canvas></div>
                             <div id="result-details" class="mt-3 text-start"></div>
-                            
                             <div class="mt-4">
                                 <button class="btn btn-outline-secondary btn-sm" onclick="restartQuiz()">重新測驗</button>
                                 <button class="btn btn-custom btn-sm" onclick="toggleQuiz()">收起測驗</button>
@@ -370,8 +405,6 @@
 
             <section class="tm-section tm-section-small">
                 <form name="lovecalculator" id="loveForm">    
-                    
-                    <!-- 寶貴的相處 -->
                     <h2 class="tm-section-header">步驟二：現況評估</h2>
                     
                     <h4 class="mt-4">寶貴的相處-得分</h4>
@@ -400,7 +433,6 @@
                         <div class="form-check"><input class="form-check-input" type="radio" name="Q3" value="-2" id="Q3_5"><label class="form-check-label" for="Q3_5">相處時總是受到打擾。</label></div>
                     </div>
 
-                    <!-- 肯定與誇讚 -->
                     <h4 class="mt-4">肯定與誇讚-得分</h4>
                     <div class="mb-3">
                         <label class="form-label fw-bold">預期/目前受肯定的狀態：</label>
@@ -432,7 +464,6 @@
                         <div class="form-check"><input class="form-check-input" type="radio" name="W3" value="-2" id="W3_5"><label class="form-check-label" for="W3_5">每天都會受到否定與貶低。</label></div>
                     </div>
 
-                    <!-- 肢體的接觸 -->
                     <h4 class="mt-4">肢體的接觸-得分</h4>
                     <div class="note-box">
                         為避免觀感不佳，使用<a href="https://zh.wikipedia.org/zh-tw/%E6%A3%92%E7%90%83%E7%9A%84%E6%80%A7%E9%9A%B1%E5%96%BB#%E7%B4%B0%E7%AF%80" target="_blank">棒球的性隱喻</a>進行描述。<br>
@@ -459,14 +490,13 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">預期/目前肢體接觸的品質：</label>
-                        <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="2" id="P3_1"><label class="form-check-label" for="P3_1">自己在壘上的癖好可以被滿足。</label></div>
-                        <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="1" id="P3_2"><label class="form-check-label" for="P3_2">伴侶有意願磨合在壘上的癖好。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="2" id="P3_1"><label class="form-check-label" for="P3_1">自己在壘上的嗜好可以被滿足。</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="1" id="P3_2"><label class="form-check-label" for="P3_2">伴侶有意願磨合在壘上的嗜好。</label></div>
                         <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="0" id="P3_3"><label class="form-check-label" for="P3_3">有到滿意壘數，但已食之無味。</label></div>
                         <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="-1" id="P3_4"><label class="form-check-label" for="P3_4">對於壘上的互動有感覺在將就。</label></div>
                         <div class="form-check"><input class="form-check-input" type="radio" name="P3" value="-2" id="P3_5"><label class="form-check-label" for="P3_5">對於壘上的互動已產生厭惡感。</label></div>
                     </div>
 
-                    <!-- 實際的服務 -->
                     <h4 class="mt-4">實際的服務-得分</h4>
                     <div class="mb-3">
                         <label class="form-label fw-bold">預期/目前彼此實際服務的狀態：</label>
@@ -493,7 +523,6 @@
                         <div class="form-check"><input class="form-check-input" type="radio" name="A3" value="-2" id="A3_5"><label class="form-check-label" for="A3_5">寧缺勿濫，不求伴侶的服務了。</label></div>
                     </div>
 
-                    <!-- 能得到禮物 -->
                     <h4 class="mt-4">能得到禮物-得分</h4>
                     <div class="mb-3">
                         <label class="form-label fw-bold">預期/目前得到禮物的狀態：</label>
@@ -520,7 +549,6 @@
                         <div class="form-check"><input class="form-check-input" type="radio" name="R3" value="-2" id="R3_5"><label class="form-check-label" for="R3_5">明顯是完全沒誠意的敷衍送禮。</label></div>
                     </div>      
 
-                    <!-- 決定與承諾 -->
                     <h4 class="mt-4">決定與承諾-得分</h4>
                     <div class="mb-3">
                         <label class="form-label fw-bold">預期/目前決定與承諾的狀態：</label>
@@ -567,7 +595,7 @@
                 <div id="result" class="h4 text-center mt-4 fw-bold" style="color: var(--accent-color);"></div>
                 <div id="point" class="text-center mt-3 lh-lg"></div>
 
-                <!-- 新增：權重比較圖 (重疊柱狀圖) -->
+                <!-- 權重比較圖 -->
                 <div class="chart-wrapper mt-4">
                     <canvas id="WeightedChart"></canvas>
                 </div>
@@ -578,23 +606,61 @@
                 
                 <hr class="my-5">
 
-                <h3 class="tm-section-header">愛的三角理論分析</h3>
+                <h3 class="tm-section-header">愛的三因論分析</h3>
                 <div class="note-box">
                     愛的三角繪製方法：<br>
                     (1)先取得各項愛之語的原始分數。<br>
-                    (2)因為雷達圖無法顯示負數，故將每一題原始分數加上2分，每一題得分由低到高變為：0、1、2、3、4分。<br>
+                    (2)因為圖表無法顯示負數，故將每一題原始分數加上2分，每一題得分由低到高變為：0、1、2、3、4分。<br>
                     (3)將「寶貴的相處-得分」、「肯定與誇讚-得分」、「實際的服務-得分」、「能得到禮物-得分」歸類為「親密」，將其分數加總後平均。<br>
                     (4)將「決定與承諾-得分」視為「決定/承諾」。<br>
                     (5)將「肢體的接觸-得分」視為「激情」。<br>
-                    (6)各面向得分由低到高為0~12分，將結果以雷達圖呈現。<br>
-                    ※您可以參考<a href="https://zh.wikipedia.org/zh-tw/%E7%88%B1%E6%83%85%E4%B8%89%E5%9B%A0%E8%AE%BA#%E7%88%B1%E7%9A%84%E7%B1%BB%E5%9E%8B" target="_blank">維基百科</a>，了解這段感情比較屬於何種類型的愛，簡而言之，越趨向「正三角形」，代表這段感情越接近完美的愛情，三角形的大小也代表戀愛程度的強弱。
+                    (6)各面向得分由低到高為0~12分，將結果以互動式圓形集合圖呈現。<br>
+                    ※圓圈的大小代表該要素的強度。當得分超過 6.0 分時，圓圈將會顯示亮色光暈。要素得分達到 7.0 分以上才被程式視為「存在」，用以判斷目前愛的形式。<br>
+                    ※您可以參考<a href="https://zh.wikipedia.org/zh-tw/%E7%88%B1%E6%83%85%E4%B8%89%E5%9B%A0%E8%AE%BA#%E7%88%B1%E7%9A%84%E7%B1%BB%E5%9E%8B" target="_blank">維基百科</a>，了解這段感情比較屬於何種類型的愛，簡而言之，越趨向「正三角形」(三圓交集)，代表這段感情越接近完美的愛情，圓形的大小也代表戀愛程度的強弱。
                 </div>              
                 
-                <div class="chart-wrapper">
-                    <canvas id="chartRadar"></canvas>
-                </div> <!-- 雷達圖 -->
+                <!-- D3 視覺化區域 -->
+                <div class="d-flex justify-content-center my-4">
+                    <svg id="visualization" width="500" height="450">
+                        <!-- SVG 濾鏡定義：用於實現圓圈大於 6.0 時的亮色光暈效果 -->
+                        <defs>
+                            <filter id="lightGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                <!-- 1. 模糊原始圓形 (增加 stdDeviation 至 8 讓光暈更寬) -->
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"></feGaussianBlur>
+                                <!-- 2. 將模糊結果轉為白色（或其他亮色） -->
+                                <feColorMatrix in="blur" type="matrix" values="0 0 0 0 1  
+                                                                               0 0 0 0 1  
+                                                                               0 0 0 0 1  
+                                                                               0 0 0 1 0" result="whiteBlur"></feColorMatrix>
+                                <!-- 3. 放大白色的光暈效果 (增加 slope 至 3.0 讓光暈更亮) -->
+                                <feComponentTransfer in="whiteBlur" result="glow">
+                                    <feFuncA type="linear" slope="3.0" intercept="0"></feFuncA>
+                                </feComponentTransfer>
+                                <!-- 4. 將放大後的白色光暈（glow）疊加在原始圖形之前 -->
+                                <feMerge>
+                                    <feMergeNode in="glow"></feMergeNode>
+                                    <feMergeNode in="SourceGraphic"></feMergeNode>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                    </svg>
+                </div>
+                
+                <!-- 狀態顯示框 -->
+                <div id="status">
+                    <strong style="font-size: 1.25rem;">當前的愛的形式：</strong>
+                    <!-- 愛的形式名稱 -->
+                    <p id="loveFormName" style="font-size: 1.5rem; font-weight: 800; margin-top: 0.5rem; color: var(--accent-color);">請先進行計算</p>
+                    <!-- 具備的元素 -->
+                    <p id="loveFormElements" style="margin-top: 0.25rem; font-weight: 500;"></p>
+                    <!-- 關係特徵描述 -->
+                    <p id="loveFormDescription" style="margin-top: 0.5rem; font-style: italic;"></p>
+                </div>
 
-                <!-- 新增列印按鈕 -->
+                <!-- 工具提示 -->
+                <div id="tooltip" class="d3-tooltip"></div>
+
+                <!-- 列印按鈕 -->
                 <div class="text-center mt-5 mb-4 no-print">
                     <button class="btn btn-outline-custom btn-lg" onclick="window.print()">
                         <i class="fas fa-print"></i> 列印作答結果
@@ -723,16 +789,13 @@
             document.getElementById('result-screen').classList.remove('hidden');
             renderQuizChart();
             renderQuizTextResult();
-            // 自動填入功能
             applyQuizResults();
         }
 
         function renderQuizTextResult() {
             const container = document.getElementById('result-details');
             container.innerHTML = '';
-            
             const sortedScores = Object.entries(quizScores).sort((a, b) => b[1] - a[1]);
-            
             let html = '';
             sortedScores.forEach(([key, score]) => {
                 const percentage = Math.round((score / 30) * 100);
@@ -749,9 +812,7 @@
         function renderQuizChart() {
             const ctx = document.getElementById('quizResultChart').getContext('2d');
             if (quizChartInstance) quizChartInstance.destroy();
-
             const dataValues = [quizScores.A, quizScores.B, quizScores.C, quizScores.D, quizScores.E];
-            
             quizChartInstance = new Chart(ctx, {
                 type: 'pie',
                 data: {
@@ -777,7 +838,6 @@
             document.getElementById('start-screen').classList.remove('hidden');
         }
 
-        // 自動將測驗結果填入主表單，不需按按鈕
         function applyQuizResults() {
             Object.keys(quizScores).forEach(key => {
                 const percentage = Math.round((quizScores[key] / 30) * 100);
@@ -787,19 +847,164 @@
                     inputField.value = percentage;
                 }
             });
-            // 提示使用者已自動填入
-            // 您可以在這裡加入 alert 或 toast 提示，但目前的文字顯示已經足夠清楚
         }
 
 
         /*************************************************
-         * 第二部分：八字帖計算邏輯
+         * 第二部分：八字帖與 D3 視覺化邏輯
          *************************************************/
 
         let mainBarChart = null;
-        let mainWeightedChart = null; // 新增：權重比較圖變數
-        let mainRadarChart = null;
+        let mainWeightedChart = null; 
 
+        // --- D3 視覺化設定 ---
+        const d3Width = 500;
+        const d3Height = 450;
+        const radiusScale = 10; // 1分 = 10px 半徑
+        const PRESENCE_THRESHOLD = 7.0; 
+        const GLOW_THRESHOLD = 6.0; 
+
+        const intimacyColor = getComputedStyle(document.documentElement).getPropertyValue('--intimacy-color').trim();
+        const passionColor = getComputedStyle(document.documentElement).getPropertyValue('--passion-color').trim();
+        const commitmentColor = getComputedStyle(document.documentElement).getPropertyValue('--commitment-color').trim();
+
+        const elementColors = {
+            'A': intimacyColor,
+            'B': passionColor,
+            'C': commitmentColor
+        };
+
+        const centerDistance = 120; 
+        const triangleHeight = Math.sqrt(3) / 2 * centerDistance; 
+        const baseCy = 250; 
+
+        // 初始資料
+        const circlesData = [
+            { id: 'A', label: '親密 (Intimacy)', color: intimacyColor, cx: d3Width / 2, cy: baseCy - triangleHeight, score: 0 }, 
+            { id: 'B', label: '激情 (Passion)', color: passionColor, cx: d3Width / 2 - centerDistance / 2, cy: baseCy, score: 0 }, 
+            { id: 'C', label: '承諾 (Commitment)', color: commitmentColor, cx: d3Width / 2 + centerDistance / 2, cy: baseCy, score: 0 }  
+        ];
+        
+        // 建立 SVG 與初始元素
+        const svg = d3.select("#visualization").attr("viewBox", `0 0 ${d3Width} ${d3Height}`);
+        const g = svg.append("g");
+        const tooltip = d3.select("#tooltip");
+        const loveFormNameElement = document.getElementById('loveFormName');
+        const loveFormElementsElement = document.getElementById('loveFormElements');
+        const loveFormDescriptionElement = document.getElementById('loveFormDescription');
+        const cardTextColor = getComputedStyle(document.documentElement).getPropertyValue('--card-text').trim();
+
+        // 首次呼叫繪製函式（分數為0）
+        updateD3Vis(0, 0, 0);
+
+
+        // --- 核心函數：更新 D3 視覺化 ---
+        function updateD3Vis(scoreA, scoreB, scoreC) {
+            // 更新資料
+            const scores = { 'A': scoreA, 'B': scoreB, 'C': scoreC };
+            circlesData.forEach(d => { d.score = scores[d.id]; });
+
+            const glowA = scoreA > GLOW_THRESHOLD;
+            const glowB = scoreB > GLOW_THRESHOLD;
+            const glowC = scoreC > GLOW_THRESHOLD;
+
+            const intimacyPresent = scoreA >= PRESENCE_THRESHOLD;
+            const passionPresent = scoreB >= PRESENCE_THRESHOLD;
+            const commitmentPresent = scoreC >= PRESENCE_THRESHOLD;
+            
+            // 判斷愛的形式
+            const currentLoveForm = getLoveForm(intimacyPresent, passionPresent, commitmentPresent);
+            
+            // 更新文字
+            loveFormNameElement.textContent = currentLoveForm.name;
+            let elementsHtml = '<strong>核心要素：</strong> ';
+            if (currentLoveForm.elements.length === 0) {
+                elementsHtml += '無';
+            } else {
+                elementsHtml += currentLoveForm.elements.map((element, index) => {
+                    let label = element.name;
+                    if (element.id === 'A') label += ' (I)';
+                    else if (element.id === 'B') label += ' (P)';
+                    else if (element.id === 'C') label += ' (C)';
+                    const color = elementColors[element.id];
+                    let coloredSpan = `<span style="color:${color};">${label}</span>`;
+                    if (index < currentLoveForm.elements.length - 1) coloredSpan += ' + ';
+                    return coloredSpan;
+                }).join('');
+            }
+            loveFormElementsElement.innerHTML = elementsHtml; 
+            loveFormDescriptionElement.textContent = currentLoveForm.description;
+
+            // D3 繪圖
+            const circles = g.selectAll(".circle").data(circlesData, d => d.id);
+
+            circles.enter()
+                .append("circle")
+                .attr("class", "circle")
+                .attr("cx", d => d.cx)
+                .attr("cy", d => d.cy)
+                .attr("fill", d => d.color)
+                .attr("opacity", 0.4)
+                .on("mouseover", (event, d) => {
+                    tooltip.style("opacity", 1).html(`<strong>${d.label.split(' ')[0]}</strong><br>得分: ${d.score.toFixed(1)} / 12`);
+                })
+                .on("mousemove", (event) => {
+                    tooltip.style("left", (event.pageX + 15) + "px").style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", () => {
+                    tooltip.style("opacity", 0);
+                })
+                .merge(circles)
+                .transition().duration(500)
+                .attr("r", d => Math.max(0, d.score * radiusScale)) // 確保半徑不為負
+                .attr("opacity", d => {
+                    if (d.id === 'A' && glowA) return 0.7; 
+                    if (d.id === 'B' && glowB) return 0.7;
+                    if (d.id === 'C' && glowC) return 0.7;
+                    return 0.4;
+                })
+                .attr("filter", d => {
+                    if (d.id === 'A' && glowA) return "url(#lightGlow)";
+                    if (d.id === 'B' && glowB) return "url(#lightGlow)";
+                    if (d.id === 'C' && glowC) return "url(#lightGlow)";
+                    return null;
+                });
+
+            // 文字標籤
+            const labels = g.selectAll(".label").data(circlesData, d => d.id);
+            labels.enter()
+                .append("text")
+                .attr("class", "label")
+                .attr("x", d => d.cx)
+                .attr("text-anchor", "middle")
+                .style("font-size", "14px")
+                .style("font-weight", "bold")
+                .style("fill", cardTextColor)
+                .merge(labels)
+                .transition().duration(500)
+                .attr("y", d => d.cy - (d.score * radiusScale) - 10)
+                .text(d => d.score > 0 ? `${d.label.split(' ')[0]} (${d.score.toFixed(1)})` : "");
+        }
+
+        // --- 愛的形式判斷邏輯 ---
+        function getLoveForm(I, P, C) {
+            const elementNames = [];
+            if (I) elementNames.push({ name: '親密', id: 'A' });
+            if (P) elementNames.push({ name: '激情', id: 'B' });
+            if (C) elementNames.push({ name: '承諾', id: 'C' });
+
+            if (I && P && C) return { name: "完美愛 (Consummate Love)", elements: elementNames, description: "愛情的完整形式。這是一種理想中的關係，彼此有深層的依戀、強烈的吸引力與長期的維繫決心。" };
+            if (I && P && !C) return { name: "浪漫愛 (Romantic Love)", elements: elementNames, description: "強烈的情感和生理吸引力，有深層次的聯繫和火花，但缺乏走向永久的承諾或共同未來規劃。" };
+            if (I && !P && C) return { name: "友伴愛 (Companionate Love)", elements: elementNames, description: "一種深厚的感情依戀，彼此信任、分享，有長期的承諾，但性吸引力或強烈激情已消退。" };
+            if (!I && P && C) return { name: "愚昧愛 (Fatuous Love)", elements: elementNames, description: "從強烈迷戀迅速轉為承諾。關係如旋風般展開，但缺乏親密感和穩定基礎，未來充滿不確定性。" };
+            if (I && !P && !C) return { name: "喜歡 (Liking/Friendship)", elements: elementNames, description: "感覺親近、聯繫、理解，但沒有強烈的激情或長期的奉獻。是真正的、溫暖的友誼關係。" };
+            if (!I && P && !C) return { name: "迷戀 (Infatuation)", elements: elementNames, description: "只有強烈的生理渴望和性吸引力，沒有親密感或承諾。感覺強烈，但可能來得快去得也快，充滿不確定性。" };
+            if (!I && !P && C) return { name: "空愛 (Empty Love)", elements: elementNames, description: "關係中只有維持下去的決心或義務，親密和激情已經消失或從未存在。常發生在停滯或協議的婚姻中。" };
+            return { name: "非愛 (Nonlove)", elements: elementNames, description: "缺乏愛的三個基本要素。這適用於大多數休閒或業務關係。請嘗試提高至少一個要素的得分。" };
+        }
+
+
+        // --- 原有計算與輔助函式 ---
         function getRadioSum(groupName) {
             const checkedRadios = document.querySelectorAll(`input[name="${groupName}"]:checked`);
             let sum = 0;
@@ -815,24 +1020,19 @@
         }
 
         function CalculateLove() {
-            // 取得各面向占比 (百分比)
             const pQ = getInputValue("QualityTime") / 100;
             const pW = getInputValue("WordsOfAffirmation") / 100;
             const pP = getInputValue("PhysicalTouch") / 100;
             const pA = getInputValue("ActsOfService") / 100;
             const pR = getInputValue("ReceivingGifts") / 100;
 
-            // 取得各面向原始分數 (加總單選題得分)
             const scoreQ_Raw = getRadioSum("Q1") + getRadioSum("Q2") + getRadioSum("Q3");
             const scoreW_Raw = getRadioSum("W1") + getRadioSum("W2") + getRadioSum("W3");
             const scoreP_Raw = getRadioSum("P1") + getRadioSum("P2") + getRadioSum("P3");
             const scoreA_Raw = getRadioSum("A1") + getRadioSum("A2") + getRadioSum("A3");
             const scoreR_Raw = getRadioSum("R1") + getRadioSum("R2") + getRadioSum("R3");
-            
-            // 決定與承諾 (獨立)
             const scoreD_Raw = getRadioSum("D1") + getRadioSum("D2") + getRadioSum("D3");
 
-            // 計算加權分數
             const scoreQ_Final = scoreQ_Raw * pQ;
             const scoreW_Final = scoreW_Raw * pW;
             const scoreP_Final = scoreP_Raw * pP;
@@ -841,7 +1041,6 @@
 
             const totalScore = scoreQ_Final + scoreW_Final + scoreP_Final + scoreA_Final + scoreR_Final;
 
-            // 顯示結果文字
             document.getElementById("result").innerHTML = `您的感情得分：${Math.round(totalScore * 10) / 10} 分`;
             document.getElementById("point").innerHTML = `
                 <div class="table-responsive">
@@ -858,35 +1057,33 @@
                 </div>
             `;
 
-            // 新增：繪製權重比較圖 (重疊柱狀圖)
             const weightedCtx = document.getElementById('WeightedChart').getContext('2d');
             if (mainWeightedChart) mainWeightedChart.destroy();
-
             mainWeightedChart = new Chart(weightedCtx, {
                 type: 'bar',
                 data: {
                     labels: ['寶貴的相處', '肯定與誇讚', '肢體的接觸', '實際的服務', '能得到禮物'],
                     datasets: [
                         {
-                            label: '權重滿分', // 背景柱（理論滿分）
+                            label: '權重滿分', 
                             data: [(6*pQ), (6*pW), (6*pP), (6*pA), (6*pR)],
                             backgroundColor: 'rgba(200, 200, 200, 0.4)',
                             borderColor: 'rgba(200, 200, 200, 1)',
                             borderWidth: 1,
-                            barPercentage: 1.0, // 較寬，作為背景
+                            barPercentage: 1.0, 
                             categoryPercentage: 0.8,
-                            order: 0, // Lower order -> Drawn first -> Bottom
+                            order: 0,
                             grouped: false
                         },
                         {
-                            label: '換算得分', // 前景柱（實際得分）
+                            label: '換算得分', 
                             data: [scoreQ_Final, scoreW_Final, scoreP_Final, scoreA_Final, scoreR_Final],
                             backgroundColor: 'rgba(153, 102, 51, 0.8)',
                             borderColor: 'rgba(153, 102, 51, 1)',
                             borderWidth: 1,
-                            barPercentage: 0.5, // 較窄，顯示於前方
+                            barPercentage: 0.5, 
                             categoryPercentage: 0.8,
-                            order: 1, // Higher order -> Drawn later -> Top
+                            order: 1, 
                             grouped: false
                         }
                     ]
@@ -894,29 +1091,13 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: '換算得分 vs 權重滿分'
-                        }
-                    },
-                    scales: {
-                        x: {
-                            stacked: true // 確保在同一個位置
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#eee' }
-                        }
-                    }
+                    plugins: { title: { display: true, text: '換算得分 vs 權重滿分' } },
+                    scales: { x: { stacked: true }, y: { beginAtZero: true, grid: { color: '#eee' } } }
                 }
             });
 
-
-            // 繪製原始分數柱狀圖
             const barCtx = document.getElementById('LoveChart').getContext('2d');
             if (mainBarChart) mainBarChart.destroy();
-
             mainBarChart = new Chart(barCtx, {
                 type: 'bar',
                 data: {
@@ -932,59 +1113,18 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: '各面向原始分數'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            min: -6,
-                            max: 6,
-                            grid: { color: '#eee' }
-                        }
-                    }
+                    plugins: { title: { display: true, text: '各面向原始分數' } },
+                    scales: { y: { beginAtZero: false, min: -6, max: 6, grid: { color: '#eee' } } }
                 }
             });
 
-            // 繪製雷達圖
+            // 計算 D3 視覺化所需數值 (0-12 scale)
             const intimacy = (scoreQ_Raw + scoreW_Raw + scoreA_Raw + scoreR_Raw + 24) / 4; 
             const commitment = scoreD_Raw + 6;
             const passion = scoreP_Raw + 6;
 
-            const radarCtx = document.getElementById("chartRadar").getContext('2d');
-            if (mainRadarChart) mainRadarChart.destroy();
-
-            mainRadarChart = new Chart(radarCtx, {
-                type: 'radar',
-                data: {
-                    labels: ["親密", "決定/承諾", "激情"],
-                    datasets: [{
-                        label: "愛的三因論得分",
-                        data: [intimacy, commitment, passion],
-                        backgroundColor: "rgba(212,147,81,0.2)",
-                        borderColor: "rgba(212,147,81,1)",
-                        pointBackgroundColor: "rgba(212,147,81,1)",
-                        pointBorderColor: "#fff",
-                        pointHoverBackgroundColor: "#fff",
-                        pointHoverBorderColor: "rgba(212,147,81,1)"
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: { display: true },
-                            suggestedMin: 0,
-                            suggestedMax: 12,
-                            ticks: { stepSize: 2, backdropColor: 'transparent' }
-                        }
-                    }
-                }
-            });
+            // 更新 D3 視覺化
+            updateD3Vis(intimacy, passion, commitment);
         }
     </script>
 </body>
